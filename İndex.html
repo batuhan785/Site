@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Site işte ad mad yok</title>
+  <title>Öğrenci Portalı</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     * {
@@ -260,7 +260,7 @@
 </head>
 <body>
   <div class="header">
-    <h1>Site işte ad mad yok</h1>
+    <h1>Öğrenci Portalı</h1>
   </div>
   
   <div class="countdown-container">
@@ -345,8 +345,8 @@
     let nextId = 1;
     
     // Tatil tarihleri
-    const holidayStart = new Date(2025, 10, 7, 15, 50, 00); // 7 Kasım 2025, 15:50:00
-    const holidayEnd = new Date(2025, 10, 16, 23, 59, 59); // 14 Kasım 2025, 23:59:59
+    const holidayStart = new Date(2023, 10, 8, 0, 0, 0); // 8 Kasım 2023, 00:00:00
+    const holidayEnd = new Date(2023, 10, 16, 23, 59, 59); // 16 Kasım 2023, 23:59:59
     
     // DOM elementlerini seçme
     const tabs = document.querySelectorAll('.tab');
@@ -563,7 +563,7 @@
         const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
         
         countdownEl.textContent = `${days} gün ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        holidayInfoEl.textContent = "8-16 Kasım 2025";
+        holidayInfoEl.textContent = "8-16 Kasım 2023";
       }
     }
     
@@ -599,4 +599,4 @@
     window.deleteItem = deleteItem;
   </script>
 </body>
-</html>
+  </html>
