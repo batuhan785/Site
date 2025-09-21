@@ -1,602 +1,413 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Site iste ad mad yok</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', 'Segoe UI', sans-serif;
-    }
-    
-    body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #333;
-      line-height: 1.6;
-      min-height: 100vh;
-      padding: 20px;
-    }
-    
-    .header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    
-    .header h1 {
-      color: white;
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-    
-    .countdown-container {
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 15px;
-      padding: 20px;
-      margin-bottom: 30px;
-      text-align: center;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-    }
-    
-    .countdown-container h2 {
-      color: #2c3e50;
-      margin-bottom: 15px;
-    }
-    
-    #countdown {
-      font-size: 1.8rem;
-      font-weight: bold;
-      color: #e74c3c;
-    }
-    
-    .holiday-info {
-      margin-top: 15px;
-      font-size: 1rem;
-      color: #7f8c8d;
-    }
-    
-    .tabs {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-    
-    .tab {
-      background: rgba(255, 255, 255, 0.8);
-      padding: 12px 25px;
-      margin: 0 5px 10px;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: all 0.3s;
-      font-weight: 600;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-    }
-    
-    .tab.active {
-      background: #2c3e50;
-      color: white;
-    }
-    
-    .tab:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
-    
-    .content {
-      display: none;
-    }
-    
-    .content.active {
-      display: block;
-    }
-    
-    .card {
-      background: rgba(255, 255, 255, 0.9);
-      padding: 20px;
-      margin: 15px 0;
-      border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      position: relative;
-    }
-    
-    .card h3 {
-      color: #2c3e50;
-      margin-bottom: 10px;
-    }
-    
-    .card p {
-      margin-bottom: 10px;
-    }
-    
-    .delete-btn {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background: #e74c3c;
-      color: white;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    
-    .delete-btn:hover {
-      transform: scale(1.1);
-      background: #c0392b;
-    }
-    
-    .empty-state {
-      text-align: center;
-      padding: 30px;
-      color: #7f8c8d;
-    }
-    
-    .empty-state i {
-      font-size: 50px;
-      margin-bottom: 15px;
-      color: #bdc3c7;
-    }
-    
-    .add-btn {
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-      width: 65px;
-      height: 65px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
-      box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
-      cursor: pointer;
-      z-index: 90;
-      transition: all 0.3s;
-    }
-    
-    .add-btn:hover {
-      transform: scale(1.1) rotate(90deg);
-    }
-    
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.6);
-      z-index: 300;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(5px);
-    }
-    
-    .modal-content {
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      width: 90%;
-      max-width: 500px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
-    
-    .close {
-      float: right;
-      font-size: 26px;
-      cursor: pointer;
-      color: #7f8c8d;
-      transition: color 0.3s;
-    }
-    
-    .close:hover {
-      color: #e74c3c;
-    }
-    
-    input, select, textarea {
-      padding: 14px;
-      width: 100%;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      margin-bottom: 18px;
-      font-size: 16px;
-      background: rgba(255,255,255,0.9);
-    }
-    
-    button {
-      background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
-      color: white;
-      border: none;
-      padding: 14px;
-      width: 100%;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: all 0.3s;
-      font-weight: 600;
-      box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
-    }
-    
-    button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
-    }
-    
-    .date-badge {
-      background: #e74c3c;
-      color: white;
-      padding: 5px 10px;
-      border-radius: 20px;
-      font-size: 12px;
-      margin-left: 10px;
-    }
-    
-    @media (max-width: 768px) {
-      .header h1 {
-        font-size: 2rem;
-      }
-      
-      #countdown {
-        font-size: 1.4rem;
-      }
-      
-      .tab {
-        padding: 10px 15px;
-        font-size: 14px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Öğrenci Portalı</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Poppins', 'Segoe UI', sans-serif; }
+        html,body { height:100%; }
+        body{
+            background:linear-gradient(135deg,#1a2a6c,#b21f1f,#fdbb2d);
+            color:#fff;
+            min-height:100vh;
+            overflow-x:hidden; /* yatay kaydırmayı kapat */
+        }
+
+        header{
+            background:rgba(0,0,0,0.7);
+            padding:14px 18px;
+            display:flex;
+            align-items:center;
+            box-shadow:0 2px 10px rgba(0,0,0,0.5);
+            position:sticky;
+            top:0;
+            z-index:100;
+            backdrop-filter:blur(8px);
+        }
+        .menu-btn{font-size:24px;cursor:pointer;margin-right:12px;color:#fdbb2d;}
+        .header-title{flex:1;text-align:center;font-size:1.45rem;font-weight:600;}
+
+        .sidebar{
+            width:280px;background:rgba(0,0,0,0.85);position:fixed;top:0;left:-280px;height:100%;
+            padding-top:70px;transition:left .28s ease;z-index:200;overflow-y:auto;backdrop-filter:blur(10px);
+        }
+        .sidebar.active{left:0;}
+        .sidebar a {
+            display: block;
+            color: #fff;
+            padding: 15px 20px;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: background 0.3s;
+        }
+        .sidebar a:hover {
+            background: rgba(253, 187, 45, 0.2);
+        }
+        .sidebar i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        .overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.45);z-index:150;}
+        .overlay.active{display:block;}
+
+        .container{padding:22px;max-width:1100px;margin:0 auto;}
+        /* Eğer ekran çok küçüksa container'ın yatay padding'i azalt */
+        @media (max-width:420px){ .container{padding:14px;} .header-title{font-size:1.15rem;} }
+
+        /* ====== COUNTDOWN KISMI (DÜZELTİLDİ) ====== */
+        /* Dış kutu: tam genişlikte görünür; içeriği taşırsa gizler (overflow:hidden) */
+        .countdown-container{
+            width:100%;
+            background:rgba(255,255,255,0.08);
+            border-radius:18px;
+            padding:26px;
+            margin-bottom:26px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.28);
+            border:1px solid rgba(255,255,255,0.14);
+            text-align:center;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            overflow:hidden; /* taşan öğeleri gizle -> dışarı taşma olmaz */
+            -webkit-backdrop-filter: blur(6px);
+            backdrop-filter: blur(6px);
+        }
+
+        .countdown-title{font-size:1.75rem;margin-bottom:18px;font-weight:700;color:#fdbb2d;line-height:1.05;}
+
+        /* ÖNEMLİ: grid yerine flex kullandım, böylece mobilde her kutu eşit daralır ve taşma olmaz */
+        .countdown-row{
+            display:flex;
+            gap:14px;
+            width:100%;
+            max-width:760px; /* masaüstünde çok açılmasın */
+            justify-content:center;
+            align-items:center;
+            padding:6px 8px;
+        }
+
+        .countdown-item{
+            background:rgba(255,255,255,0.12);
+            padding:18px 12px;
+            border-radius:14px;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            min-width:64px;      /* küçük ekranlarda okunabilirlik korunsun */
+            flex:1 1 0;          /* esnek: daralabilir ama hepsi sığmaya çalışır */
+            box-shadow: inset 0 1px rgba(255,255,255,0.02);
+            backdrop-filter: blur(2px);
+        }
+
+        /* Nokta ayırıcılar (:) için küçük bir stil, mobilde metin küçülür */
+        .sep {
+            font-size:1.4rem;
+            margin:0 6px;
+            color:rgba(255,255,255,0.7);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        .countdown-item span.value{ display:block; font-size:2.1rem; font-weight:800; color:#fdbb2d; }
+        .countdown-item label{ margin-top:6px; font-size:0.95rem; color:rgba(255,255,255,0.92); }
+
+        .holiday-info{font-size:1.05rem;margin-top:16px;color:#fdbb2d;font-weight:600;}
+
+        /* Kartlar */
+        .content{display:none;animation:fadeIn .45s ease;}
+        .content.active{display:block;}
+        .card{
+            background:rgba(255,255,255,0.08);
+            padding:22px;margin:18px 0;border-radius:14px;
+            border:1px solid rgba(255,255,255,0.12);position:relative;
+        }
+        .card h3{margin-bottom:12px;font-size:1.35rem;border-left:6px solid #fdbb2d;padding-left:12px;}
+        .delete-btn{position:absolute;top:12px;right:12px;background:rgba(178,31,31,0.85);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+        .add-btn{position:fixed;bottom:28px;right:22px;width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#fdbb2d 0%,#b21f1f 100%);display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;z-index:120;}
+
+        input,select,textarea{padding:14px;width:100%;border-radius:10px;margin-bottom:14px;background:rgba(255,255,255,0.08);color:white;border:1px solid rgba(255,255,255,0.18);}
+        button{background:linear-gradient(135deg,#fdbb2d 0%,#b21f1f 100%);color:white;border:none;padding:12px;width:100%;border-radius:10px;font-size:15px;cursor:pointer;}
+
+        #upcomingList li{margin:10px 0;padding:12px;background:rgba(255,255,255,0.06);border-radius:8px;list-style:none;}
+        @keyframes fadeIn{from{opacity:0;} to{opacity:1;}}
+        /* Responsive: çok küçük ekranlarda değerleri biraz küçült */
+        @media (max-width:380px){
+            .countdown-item span.value{ font-size:1.6rem; }
+            .countdown-item{ padding:12px 8px; min-width:52px; }
+            .countdown-title{ font-size:1.25rem; }
+            .holiday-info{ font-size:0.95rem; }
+        }
+        
+        /* Modal stilleri */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 300;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: rgba(0,0,0,0.85);
+            padding: 25px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+        }
+        .close {
+            color: #fdbb2d;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
-  <div class="header">
-    <h1>Site iste ad mad yok</h1>
-  </div>
-  
-  <div class="countdown-container">
-    <h2>1. Dönem Ara Tatiline Kalan Süre</h2>
-    <div id="countdown">28 gün 12:45:32</div>
-    <div class="holiday-info" id="holidayInfo">7-14 Kasım 2025</div>
-  </div>
-  
-  <div class="tabs">
-    <div class="tab active" data-tab="exams">Sınavlar</div>
-    <div class="tab" data-tab="hadis">Hadis-i Şerifler</div>
-    <div class="tab" data-tab="homeworks">Ödevler</div>
-  </div>
-  
-  <div id="exams" class="content active">
-    <div id="examList">
-      <div class="empty-state">
-        <i class="fas fa-clipboard-list"></i>
-        <p>Henüz sınav eklenmedi.</p>
-      </div>
-    </div>
-  </div>
-  
-  <div id="hadis" class="content">
-    <div id="hadisList">
-      <div class="card">
-        <div class="delete-btn" onclick="deleteItem('hadis', 0)">
-          <i class="fas fa-times"></i>
-        </div>
-        <h3>Hadis-i Şerif</h3>
-        <p>"Allah kaş alan, kaş aldıran ve dövme yapan, yaptıran kadınlara lanet etmiştir."</p>
-        <p class="hadis-kaynak">Buhârî, Libâs, 82</p>
-      </div>
-    </div>
-  </div>
-  
-  <div id="homeworks" class="content">
-    <div id="homeworkList">
-      <div class="empty-state">
-        <i class="fas fa-book"></i>
-        <p>Henüz ödev eklenmedi.</p>
-      </div>
-    </div>
-  </div>
-  
-  <div class="add-btn" id="addBtn">
-    <i class="fas fa-plus"></i>
-  </div>
-  
-  <!-- Ekleme Modal -->
-  <div id="addModal" class="modal">
-    <div class="modal-content">
-      <span class="close" id="closeAddModal">&times;</span>
-      <h2 style="color: #2c3e50; margin-bottom: 20px;"><i class="fas fa-plus-circle"></i> Yeni İçerik Ekle</h2>
-      <select id="contentType">
-        <option value="exam">Sınav</option>
-        <option value="hadis">Hadis-i Şerif</option>
-        <option value="homework">Ödev</option>
-      </select>
-      
-      <input type="text" id="contentTitle" placeholder="Başlık">
-      <textarea id="contentDesc" placeholder="Açıklama" rows="3"></textarea>
-      <input type="datetime-local" id="contentDate">
-      
-      <button id="addContentBtn"><i class="fas fa-plus"></i> Ekle</button>
-    </div>
-  </div>
+    <div class="overlay" id="overlay"></div>
+    <header>
+        <div class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></div>
+        <div class="header-title">Öğrenci Portalı</div>
+    </header>
 
-  <script>
-    // Veri yapıları
-    let exams = [];
-    let homeworks = [];
-    let hadisler = [
-      {
-        id: 0,
-        title: "Hadis-i Şerif",
-        content: "Allah kaş alan, kaş aldıran ve dövme yapan, yaptıran kadınlara lanet etmiştir.",
-        kaynak: "Buhârî, Libâs, 82"
-      }
-    ];
-    
+    <div class="sidebar" id="sidebar">
+        <a href="#" data-section="home"><i class="fas fa-home"></i> Ana Sayfa</a>
+        <a href="#" data-section="exams"><i class="fas fa-file-alt"></i> Sınavlar</a>
+        <a href="#" data-section="hadis"><i class="fas fa-book"></i> Hadis-i Şerifler</a>
+        <a href="#" data-section="homeworks"><i class="fas fa-tasks"></i> Ödevler</a>
+        <a href="#" data-section="schedule"><i class="fas fa-calendar-alt"></i> Ders Programı</a>
+    </div>
+
+    <div class="container">
+        <div id="home" class="content active">
+            <div class="countdown-container" aria-live="polite">
+                <div class="countdown-title">1. Dönem Ara Tatiline Kalan Süre</div>
+
+                <!-- Eski grid kaldırıldı, flex ile responsive ve taşmayı engelleme -->
+                <div class="countdown-row" role="group" aria-label="geri sayım">
+                    <div class="countdown-item">
+                        <span id="days" class="value">00</span>
+                        <label>Gün</label>
+                    </div>
+
+                    <div class="countdown-item">
+                        <span id="hours" class="value">00</span>
+                        <label>Saat</label>
+                    </div>
+
+                    <div class="countdown-item">
+                        <span id="minutes" class="value">00</span>
+                        <label>Dakika</label>
+                    </div>
+
+                    <div class="countdown-item">
+                        <span id="seconds" class="value">00</span>
+                        <label>Saniye</label>
+                    </div>
+                </div>
+
+                <div class="holiday-info" id="holidayInfo">7-14 Kasım 2025</div>
+            </div>
+
+            <div class="card">
+                <h3>Hoş Geldiniz!</h3>
+                <p>Öğrenci portalına hoş geldiniz. Sol üstteki menü butonuna tıklayarak diğer bölümlere erişebilirsiniz.</p>
+            </div>
+
+            <div class="card" id="upcomingCard">
+                <h3>Yaklaşan Sınavlar/Ödevler (2 Gün Kalanlar)</h3>
+                <ul id="upcomingList"><li>Yaklaşan sınav veya ödev bulunmamaktadır.</li></ul>
+            </div>
+        </div>
+
+        <div id="exams" class="content"><h2 class="countdown-title">Sınavlar</h2><div id="examList"></div></div>
+        <div id="hadis" class="content"><h2 class="countdown-title">Hadis-i Şerifler</h2><div id="hadisList"></div></div>
+        <div id="homeworks" class="content"><h2 class="countdown-title">Ödevler</h2><div id="homeworkList"></div></div>
+        <div id="schedule" class="content">
+            <h2 class="countdown-title">Ders Programı</h2>
+            <input type="file" id="scheduleUpload" accept="image/*">
+            <img id="scheduleImage" style="display:none;max-width:100%;border-radius:10px;margin-top:16px;">
+        </div>
+    </div>
+
+    <div class="add-btn" id="addBtn"><i class="fas fa-plus"></i></div>
+
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeAddModal">&times;</span>
+            <h2>Yeni İçerik Ekle</h2>
+            <select id="contentType">
+                <option value="exam">Sınav</option>
+                <option value="hadis">Hadis-i Şerif</option>
+                <option value="homework">Ödev</option>
+            </select>
+            <input type="text" id="contentTitle" placeholder="Başlık">
+            <textarea id="contentDesc" placeholder="Açıklama"></textarea>
+            <input type="datetime-local" id="contentDate">
+            <button id="addContentBtn">Ekle</button>
+        </div>
+    </div>
+
+<script>
+    // Veriler
+    let exams = [], homeworks = [], hadisler = [{id:0,title:"Hadis-i Şerif", content:"Allah kaş alan, kaş aldıran ve dövme yapan, yaptıran kadınlara lanet etmiştir.", kaynak:"Buhârî, Libâs, 82"}];
     let nextId = 1;
-    
-    // Tatil tarihleri
-    const holidayStart = new Date(2025, 10, 7, 15, 50, 0); // 7 Kasım 2025, 15:50:00
-    const holidayEnd = new Date(2025, 10, 14, 23, 59, 59); // 14 Kasım 2025, 23:59:59
-    
-    // DOM elementlerini seçme
-    const tabs = document.querySelectorAll('.tab');
-    const addBtn = document.getElementById('addBtn');
-    const closeAddModal = document.getElementById('closeAddModal');
-    const addContentBtn = document.getElementById('addContentBtn');
-    const countdownEl = document.getElementById('countdown');
-    const holidayInfoEl = document.getElementById('holidayInfo');
-    
-    // Tab değiştirme fonksiyonu
-    function changeTab(tabName) {
-      // Tüm tabları ve içerikleri deaktif et
-      tabs.forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.content').forEach(content => content.classList.remove('active'));
-      
-      // Seçilen tabı ve içeriği aktif et
-      document.querySelector(`.tab[data-tab="${tabName}"]`).classList.add('active');
-      document.getElementById(tabName).classList.add('active');
+
+    // 7 Kasım 2025 sabah 00:00'ı hedef olarak aldık (orjinal isteğe göre)
+    const holidayStart = new Date(2025, 10, 7, 0, 0, 0);
+
+    // DOM elemanları
+    const menuBtn = document.getElementById('menuBtn'),
+          overlay = document.getElementById('overlay'),
+          sidebar = document.getElementById('sidebar'),
+          addBtn = document.getElementById('addBtn'),
+          addModal = document.getElementById('addModal'),
+          closeAddModal = document.getElementById('closeAddModal'),
+          addContentBtn = document.getElementById('addContentBtn'),
+          sidebarLinks = document.querySelectorAll('.sidebar a[data-section]'),
+          scheduleUpload = document.getElementById('scheduleUpload'),
+          scheduleImage = document.getElementById('scheduleImage');
+
+    // sidebar toggle
+    function toggleSidebar(){ sidebar.classList.toggle('active'); overlay.classList.toggle('active'); }
+    menuBtn.addEventListener('click', toggleSidebar);
+    overlay.addEventListener('click', toggleSidebar);
+
+    // tab change
+    function changeTab(tab){
+        document.querySelectorAll('.content').forEach(c=>c.classList.remove('active'));
+        document.getElementById(tab).classList.add('active');
+        // eğer sidebar açıksa kapat
+        if(sidebar.classList.contains('active')) toggleSidebar();
     }
-    
-    // Modal açma fonksiyonu
-    function openModal() {
-      document.getElementById('addModal').style.display = 'flex';
-    }
-    
-    // Modal kapatma fonksiyonu
-    function closeModal() {
-      document.getElementById('addModal').style.display = 'none';
-      // Formu temizle
-      document.getElementById('contentTitle').value = '';
-      document.getElementById('contentDesc').value = '';
-      document.getElementById('contentDate').value = '';
-    }
-    
-    // İçerik ekleme fonksiyonu
-    function addNewContent() {
-      const type = document.getElementById('contentType').value;
-      const title = document.getElementById('contentTitle').value;
-      const desc = document.getElementById('contentDesc').value;
-      const date = document.getElementById('contentDate').value;
-      
-      if (!title) {
-        alert('Lütfen bir başlık girin!');
-        return;
-      }
-      
-      const newContent = {
-        id: nextId++,
-        title,
-        desc,
-        date,
-        timestamp: new Date().getTime()
-      };
-      
-      if (type === 'exam') {
-        exams.push(newContent);
-        renderExams();
-      } else if (type === 'homework') {
-        homeworks.push(newContent);
-        renderHomeworks();
-      } else if (type === 'hadis') {
-        hadisler.push({
-          id: newContent.id,
-          title: newContent.title,
-          content: newContent.desc,
-          kaynak: newContent.date ? `Eklenme: ${formatDate(newContent.date)}` : "Kaynak belirtilmemiş"
-        });
-        renderHadisler();
-      }
-      
-      // Modalı kapat
-      closeModal();
-      alert('İçerik başarıyla eklendi!');
-    }
-    
-    // İçerik silme fonksiyonu
-    function deleteItem(type, id) {
-      if (type === 'exam') {
-        exams = exams.filter(exam => exam.id !== id);
-        renderExams();
-      } else if (type === 'homework') {
-        homeworks = homeworks.filter(hw => hw.id !== id);
-        renderHomeworks();
-      } else if (type === 'hadis') {
-        // İlk hadisi silme (index 0)
-        if (id === 0 && hadisler.length > 0 && hadisler[0].id === 0) {
-          hadisler.shift();
-        } else {
-          hadisler = hadisler.filter(hadis => hadis.id !== id);
-        }
-        renderHadisler();
-      }
-    }
-    
-    // Sınavları render etme fonksiyonu
-    function renderExams() {
-      const examList = document.getElementById('examList');
-      
-      if (exams.length === 0) {
-        examList.innerHTML = `
-          <div class="empty-state">
-            <i class="fas fa-clipboard-list"></i>
-            <p>Henüz sınav eklenmedi.</p>
-          </div>
-        `;
-        return;
-      }
-      
-      examList.innerHTML = exams.map(exam => `
-        <div class="card">
-          <div class="delete-btn" onclick="deleteItem('exam', ${exam.id})">
-            <i class="fas fa-times"></i>
-          </div>
-          <h3>${exam.title}</h3>
-          <p>${exam.desc || ''}</p>
-          <p><strong>Tarih:</strong> ${exam.date ? formatDateTime(exam.date) : 'Tarih belirtilmemiş'}</p>
-        </div>
-      `).join('');
-    }
-    
-    // Ödevleri render etme fonksiyonu
-    function renderHomeworks() {
-      const homeworkList = document.getElementById('homeworkList');
-      
-      if (homeworks.length === 0) {
-        homeworkList.innerHTML = `
-          <div class="empty-state">
-            <i class="fas fa-book"></i>
-            <p>Henüz ödev eklenmedi.</p>
-          </div>
-        `;
-        return;
-      }
-      
-      homeworkList.innerHTML = homeworks.map(homework => `
-        <div class="card">
-          <div class="delete-btn" onclick="deleteItem('homework', ${homework.id})">
-            <i class="fas fa-times"></i>
-          </div>
-          <h3>${homework.title}</h3>
-          <p>${homework.desc || ''}</p>
-          <p><strong>Teslim Tarihi:</strong> ${homework.date ? formatDateTime(homework.date) : 'Tarih belirtilmemiş'}</p>
-        </div>
-      `).join('');
-    }
-    
-    // Hadisleri render etme fonksiyonu
-    function renderHadisler() {
-      const hadisList = document.getElementById('hadisList');
-      
-      if (hadisler.length === 0) {
-        hadisList.innerHTML = `
-          <div class="empty-state">
-            <i class="fas fa-book"></i>
-            <p>Henüz hadis eklenmedi.</p>
-          </div>
-        `;
-        return;
-      }
-      
-      hadisList.innerHTML = hadisler.map(hadis => `
-        <div class="card">
-          <div class="delete-btn" onclick="deleteItem('hadis', ${hadis.id})">
-            <i class="fas fa-times"></i>
-          </div>
-          <h3>${hadis.title}</h3>
-          <p>"${hadis.content}"</p>
-          <p class="hadis-kaynak">${hadis.kaynak}</p>
-        </div>
-      `).join('');
-    }
-    
-    // Tarih formatlama fonksiyonu
-    function formatDateTime(dateTimeString) {
-      if (!dateTimeString) return 'Tarih belirtilmemiş';
-      
-      const date = new Date(dateTimeString);
-      return date.toLocaleString('tr-TR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    }
-    
-    // Geri sayım fonksiyonu
-    function updateCountdown() {
-      const now = new Date();
-      
-      // Tatil durumunu kontrol et
-      if (now >= holidayStart && now <= holidayEnd) {
-        // Tatil devam ediyor
-        const remainingHoliday = holidayEnd - now;
-        const days = Math.floor(remainingHoliday / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((remainingHoliday % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((remainingHoliday % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((remainingHoliday % (1000 * 60)) / 1000);
-        
-        countdownEl.innerHTML = `<span style="color:#2ecc71;">Tatil Devam Ediyor!</span><br>${days} gün ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        holidayInfoEl.textContent = "Tatil bitene kadar eğlence zamanı!";
-      } 
-      else if (now > holidayEnd) {
-        // Tatil bitmiş
-        countdownEl.innerHTML = '<span style="color:#e74c3c;">Tatil Bitti!</span>';
-        holidayInfoEl.textContent = "Okula dönüş zamanı!";
-      }
-      else {
-        // Tatil başlamamış
-        const remaining = holidayStart - now;
-        const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
-        
-        countdownEl.textContent = `${days} gün ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        holidayInfoEl.textContent = "8-16 Kasım 2023";
-      }
-    }
-    
-    // Event listener'ları ekleme
-    document.addEventListener('DOMContentLoaded', function() {
-      // Tab tıklama
-      tabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-          changeTab(this.getAttribute('data-tab'));
-        });
-      });
-      
-      // Ekleme butonu
-      addBtn.addEventListener('click', openModal);
-      
-      // Modal kapatma butonu
-      closeAddModal.addEventListener('click', closeModal);
-      
-      // İçerik ekleme butonu
-      addContentBtn.addEventListener('click', addNewContent);
-      
-      // Sayfa yüklendiğinde içerikleri render et
-      renderExams();
-      renderHomeworks();
-      renderHadisler();
-      
-      // Geri sayımı başlat
-      updateCountdown();
-      setInterval(updateCountdown, 1000);
+    sidebarLinks.forEach(l=>l.addEventListener('click', e=>{ e.preventDefault(); changeTab(l.dataset.section); }));
+
+    // modal
+    addBtn.addEventListener('click', ()=> { addModal.style.display = 'flex'; });
+    closeAddModal && closeAddModal.addEventListener('click', ()=> { addModal.style.display = 'none'; });
+    window.addEventListener('click', e => { if(e.target === addModal){ addModal.style.display = 'none'; } });
+
+    // add content
+    addContentBtn && addContentBtn.addEventListener('click', ()=>{
+        const type = document.getElementById('contentType').value,
+              title = document.getElementById('contentTitle').value.trim(),
+              desc = document.getElementById('contentDesc').value.trim(),
+              date = document.getElementById('contentDate').value;
+        if(!title) return alert("Başlık giriniz!");
+        if(type === "exam"){ exams.push({id: nextId++, title, desc, date}); renderExams(); changeTab('exams'); }
+        else if(type === "hadis"){ hadisler.push({id: nextId++, title, content: desc, kaynak: date}); renderHadisler(); changeTab('hadis'); }
+        else if(type === "homework"){ homeworks.push({id: nextId++, title, desc, date}); renderHomeworks(); changeTab('homeworks'); }
+        // temizle
+        document.getElementById('contentTitle').value = "";
+        document.getElementById('contentDesc').value = "";
+        document.getElementById('contentDate').value = "";
+        addModal.style.display = 'none';
     });
-    
-    // Dışarıya açık fonksiyonlar
+
+    // render fonksiyonları
+    function renderExams(){
+        const list = document.getElementById('examList');
+        if(!list) return;
+        list.innerHTML = exams.length === 0 ? '<p>Henüz sınav eklenmedi.</p>' :
+            exams.map(e => `<div class="card"><div class="delete-btn" onclick="deleteItem('exam',${e.id})"><i class="fas fa-times"></i></div><h3>${escapeHtml(e.title)}</h3><p>${escapeHtml(e.desc)}</p><p><strong>Tarih:</strong> ${e.date || '-'}</p></div>`).join('');
+        renderUpcoming();
+    }
+    function renderHomeworks(){
+        const list = document.getElementById('homeworkList');
+        if(!list) return;
+        list.innerHTML = homeworks.length === 0 ? '<p>Henüz ödev eklenmedi.</p>' :
+            homeworks.map(h => `<div class="card"><div class="delete-btn" onclick="deleteItem('homework',${h.id})"><i class="fas fa-times"></i></div><h3>${escapeHtml(h.title)}</h3><p>${escapeHtml(h.desc)}</p><p><strong>Teslim:</strong> ${h.date || '-'}</p></div>`).join('');
+        renderUpcoming();
+    }
+    function renderHadisler(){
+        const list = document.getElementById('hadisList');
+        if(!list) return;
+        list.innerHTML = hadisler.length === 0 ? '<p>Henüz hadis eklenmedi.</p>' :
+            hadisler.map(h => `<div class="card"><div class="delete-btn" onclick="deleteItem('hadis',${h.id})"><i class="fas fa-times"></i></div><h3>${escapeHtml(h.title)}</h3><p>${escapeHtml(h.content)}</p>${h.kaynak?`<p><em>${escapeHtml(h.kaynak)}</em></p>`:""}</div>`).join('');
+    }
+
+    function renderUpcoming(){
+        const list = document.getElementById('upcomingList');
+        if(!list) return;
+        const now = new Date();
+        let upcoming = [];
+        exams.forEach(e => { if(e.date){ const diff=(new Date(e.date) - now)/(1000*60*60*24); if(diff>=0 && diff<=2) upcoming.push({type:"Sınav", title:e.title, date:e.date}); }});
+        homeworks.forEach(h => { if(h.date){ const diff=(new Date(h.date) - now)/(1000*60*60*24); if(diff>=0 && diff<=2) upcoming.push({type:"Ödev", title:h.title, date:h.date}); }});
+        if(upcoming.length === 0){ list.innerHTML = '<li>Yaklaşan sınav veya ödev bulunmamaktadır.</li>'; return; }
+        list.innerHTML = upcoming.map(i => `<li><strong>${i.type}:</strong> ${escapeHtml(i.title)} <small>(${new Date(i.date).toLocaleString('tr-TR')})</small></li>`).join('');
+    }
+
+    // delete
+    function deleteItem(type,id){
+        if(type==="exam"){ exams = exams.filter(e => e.id !== id); renderExams(); }
+        else if(type==="hadis"){ hadisler = hadisler.filter(h => h.id !== id); renderHadisler(); }
+        else if(type==="homework"){ homeworks = homeworks.filter(h => h.id !== id); renderHomeworks(); }
+    }
     window.deleteItem = deleteItem;
-  </script>
+
+    // schedule upload preview
+    scheduleUpload && scheduleUpload.addEventListener('change', e => {
+        const file = e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = ev => { scheduleImage.src = ev.target.result; scheduleImage.style.display = "block"; }
+        reader.readAsDataURL(file);
+    });
+
+    // Güvenlik: basit kaçış
+    function escapeHtml(text){
+        if(!text) return '';
+        return String(text).replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[m]; });
+    }
+
+    /* ====== Geri sayım (countdown) ====== */
+    function updateCountdown(){
+        const now = new Date();
+        const diff = holidayStart - now;
+        const daysEl = document.getElementById('days'),
+              hoursEl = document.getElementById('hours'),
+              minutesEl = document.getElementById('minutes'),
+              secondsEl = document.getElementById('seconds');
+
+        if(diff <= 0){
+            if(daysEl) daysEl.innerText = "00";
+            if(hoursEl) hoursEl.innerText = "00";
+            if(minutesEl) minutesEl.innerText = "00";
+            if(secondsEl) secondsEl.innerText = "00";
+            return;
+        }
+
+        const days = Math.floor(diff / (1000*60*60*24));
+        const hours = Math.floor((diff / (1000*60*60)) % 24);
+        const minutes = Math.floor((diff / (1000*60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        if(daysEl) daysEl.innerText = String(days).padStart(2,'0');
+        if(hoursEl) hoursEl.innerText = String(hours).padStart(2,'0');
+        if(minutesEl) minutesEl.innerText = String(minutes).padStart(2,'0');
+        if(secondsEl) secondsEl.innerText = String(seconds).padStart(2,'0');
+    }
+
+    // başlat
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+    renderExams(); renderHomeworks(); renderHadisler(); renderUpcoming();
+
+</script>
 </body>
-    </html>
+</html>
