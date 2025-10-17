@@ -83,6 +83,232 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
 .topic-input {flex:1;}
 .add-topic-input-btn {background:#3b82f6;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;width:auto;font-size:12px;}
 .remove-topic-btn {background:var(--accent-danger);color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;width:auto;font-size:12px;}
+
+/* POMODORO STİLLERİ */
+.pomodoro-container {
+  background: var(--bg-card);
+  border-radius: 18px;
+  padding: 26px;
+  margin-bottom: 26px;
+  border: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.pomodoro-timer {
+  font-size: 4rem;
+  font-weight: 800;
+  color: var(--accent-warning);
+  margin: 20px 0;
+  font-family: 'Courier New', monospace;
+}
+
+.pomodoro-controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.pomodoro-btn {
+  background: linear-gradient(135deg, var(--accent-warning), var(--accent-danger));
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.pomodoro-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.pomodoro-btn:disabled {
+  background: #6b7280;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.time-options {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.time-option {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.time-option.active {
+  background: linear-gradient(135deg, var(--accent-warning), var(--accent-danger));
+  border-color: var(--accent-warning);
+}
+
+.pomodoro-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-warning);
+  display: block;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  display: block;
+  margin-top: 5px;
+}
+
+/* SEVİYE SİSTEMİ */
+.level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  margin-left: 8px;
+}
+
+.xp-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  margin: 8px 0;
+  overflow: hidden;
+}
+
+.xp-progress {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #34d399);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.leaderboard-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  margin: 8px 0;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border-left: 4px solid var(--accent-warning);
+}
+
+.leaderboard-rank {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--accent-warning);
+  min-width: 30px;
+  text-align: center;
+}
+
+.leaderboard-info {
+  flex: 1;
+}
+
+.leaderboard-name {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.leaderboard-level {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.leaderboard-xp {
+  font-weight: 700;
+  color: var(--accent-warning);
+}
+
+/* Öğrenci kartlarında seviye gösterimi */
+.student-level {
+  display: inline-block;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  margin-left: 8px;
+}
+
+.student-item {
+  padding: 12px;
+  margin: 8px 0;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  border-left: 4px solid var(--accent-warning);
+}
+
+/* İkili liderlik stilleri */
+.leaderboard-section {
+  margin-bottom: 30px;
+}
+
+.leaderboard-section h3 {
+  color: var(--accent-warning);
+  margin-bottom: 15px;
+  border-left: 4px solid var(--accent-warning);
+  padding-left: 10px;
+}
+
+.monthly-badge {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  margin-left: 8px;
+}
+
+.total-badge {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  margin-left: 8px;
+}
+
+/* STREAK STİLLERİ */
+.streak-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: white;
+  margin-left: 8px;
+}
 </style>
 </head>
 <body>
@@ -113,6 +339,8 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
   <a href="#" data-section="hadis"><i class="fas fa-book"></i> Hadis-i Şerifler</a>
   <a href="#" data-section="class"><i class="fas fa-users"></i> Sınıf Listesi</a>
   <a href="#" data-section="examTopics"><i class="fas fa-list-alt"></i> Sınav Konuları</a>
+  <a href="#" data-section="pomodoro"><i class="fas fa-clock"></i> Pomodoro Timer</a>
+  <a href="#" data-section="leaderboard"><i class="fas fa-trophy"></i> Liderlik Tablosu</a>
   <a href="#" id="adminSwitch"><i class="fas fa-user-shield"></i> Admin Profiline Geçiş Yap</a>
 </div>
 
@@ -175,6 +403,86 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
       <div class="card"><p>Henüz sınav konusu eklenmedi.</p></div>
     </div>
   </div>
+
+  <!-- POMODORO TIMER BÖLÜMÜ -->
+  <div id="pomodoro" class="content">
+    <div class="pomodoro-container">
+      <h2 class="countdown-title">Pomodoro Timer</h2>
+      
+      <div class="time-options">
+        <div class="time-option active" data-minutes="30">30 Dakika</div>
+        <div class="time-option" data-minutes="60">60 Dakika</div>
+        <div class="time-option" data-minutes="90">90 Dakika</div>
+      </div>
+      
+      <div class="pomodoro-timer" id="pomodoroTimer">30:00</div>
+      
+      <div class="pomodoro-controls">
+        <button class="pomodoro-btn" id="startPomodoro">Başlat</button>
+        <button class="pomodoro-btn" id="pausePomodoro" disabled>Duraklat</button>
+        <button class="pomodoro-btn" id="resetPomodoro">Sıfırla</button>
+      </div>
+      
+      <div class="pomodoro-stats">
+        <div class="stat-card">
+          <span class="stat-value" id="totalStudyTime">0</span>
+          <span class="stat-label">Toplam Çalışma (dk)</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="currentLevel">1</span>
+          <span class="stat-label">Seviye</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="currentXP">0</span>
+          <span class="stat-label">XP</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="currentStreak">0</span>
+          <span class="stat-label">Üst Üste Gün</span>
+        </div>
+      </div>
+
+      <div class="xp-bar">
+        <div class="xp-progress" id="xpProgress" style="width: 0%"></div>
+      </div>
+      <small>Sonraki seviye: <span id="nextLevelXP">250</span> XP</small>
+    </div>
+  </div>
+
+  <!-- LİDERLİK TABLOSU BÖLÜMÜ -->
+  <div id="leaderboard" class="content">
+    <!-- AYLIK LİDERLİK -->
+    <div class="card">
+      <h2 class="countdown-title">🏆 AYLIK LİDERLİK</h2>
+      <p>Bu ayki çalışma performansı - Her ayın 1'inde sıfırlanır</p>
+      <div id="monthlyLeaderboard">
+        <div class="leaderboard-item">
+          <div class="leaderboard-rank">1</div>
+          <div class="leaderboard-info">
+            <div class="leaderboard-name">Örnek Öğrenci <span class="monthly-badge">Bu Ay</span></div>
+            <div class="leaderboard-level">0 XP • 0 dakika</div>
+          </div>
+          <div class="leaderboard-xp">🥇</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOPLAM LİDERLİK -->
+    <div class="card">
+      <h2 class="countdown-title">⭐ TÜM ZAMANLAR LİDERLİĞİ</h2>
+      <p>Kariyer performansı - Kalıcı istatistikler</p>
+      <div id="totalLeaderboard">
+        <div class="leaderboard-item">
+          <div class="leaderboard-rank">1</div>
+          <div class="leaderboard-info">
+            <div class="leaderboard-name">Örnek Öğrenci <span class="total-badge">Seviye 1</span></div>
+            <div class="leaderboard-level">0 XP • 0 dakika</div>
+          </div>
+          <div class="leaderboard-xp">⭐</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="add-btn" id="addBtn"><i class="fas fa-plus"></i></div>
@@ -201,7 +509,6 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
     <button id="saveContentBtn">Kaydet</button>
   </div>
 </div>
-
 <!-- Sınav Konuları Ekleme Modalı -->
 <div id="addTopicModal" class="modal">
   <div class="modal-content">
@@ -229,6 +536,7 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
     <button id="saveTopicBtn">Kaydet</button>
   </div>
 </div>
+
 <script>
 // Önem seviyeleri
 const importanceLevels = {
@@ -239,9 +547,29 @@ const importanceLevels = {
   5:{label:"KRİTİK", icon:"⭐⭐⭐⭐⭐", class:"importance-5"}
 };
 
+// STREAK RENK SİSTEMİ
+const streakColors = {
+  1: "#6b7280",   // Gri - Yeni başladı
+  3: "#f59e0b",   // Turuncu - Ateş başladı
+  7: "#ef4444",   // Kırmızı - İyi gidiyor
+  14: "#dc2626",  // Koyu kırmızı - Harika
+  30: "#7c3aed",  // Mor - Efsane
+  60: "#10b981",  // Yeşil - Destansı
+  90: "#06b6d4"   // Camgöbeği - Efsanevi
+};
+
 // Veriler
 let students=[], currentUser=null, isAdmin=false, nextId=100;
 let exams=[], homeworks=[], hadises=[], examTopics=[];
+
+// Pomodoro ve Seviye Sistemi Verileri
+let userStats = {};
+let pomodoroInterval = null;
+let currentTime = 30 * 60; // 30 dakika default
+let isRunning = false;
+let selectedTime = 30;
+let earnedXP = 0;
+let startTime = null;
 
 // DOM
 const loginModal=document.getElementById('loginModal');
@@ -272,6 +600,23 @@ const addExamTopicBtn=document.getElementById('addExamTopicBtn');
 const addTopicInputBtn=document.getElementById('addTopicInputBtn');
 const topicsInputs=document.getElementById('topicsInputs');
 
+// Pomodoro DOM
+const pomodoroTimer=document.getElementById('pomodoroTimer');
+const startPomodoro=document.getElementById('startPomodoro');
+const pausePomodoro=document.getElementById('pausePomodoro');
+const resetPomodoro=document.getElementById('resetPomodoro');
+const timeOptions=document.querySelectorAll('.time-option');
+const totalStudyTimeEl=document.getElementById('totalStudyTime');
+const currentLevel=document.getElementById('currentLevel');
+const currentXP=document.getElementById('currentXP');
+const currentStreakEl=document.getElementById('currentStreak');
+const xpProgress=document.getElementById('xpProgress');
+const nextLevelXP=document.getElementById('nextLevelXP');
+
+// Liderlik DOM
+const monthlyLeaderboard=document.getElementById('monthlyLeaderboard');
+const totalLeaderboard=document.getElementById('totalLeaderboard');
+
 // Yükleme
 window.addEventListener('load',()=>{
   const savedUser=localStorage.getItem('currentUser');
@@ -280,6 +625,7 @@ window.addEventListener('load',()=>{
   const savedHomeworks=localStorage.getItem('homeworks');
   const savedHadis=localStorage.getItem('hadises');
   const savedTopics=localStorage.getItem('examTopics');
+  const savedStats=localStorage.getItem('userStats');
 
   if(savedUser){
     currentUser=JSON.parse(savedUser);
@@ -291,9 +637,104 @@ window.addEventListener('load',()=>{
   if(savedHomeworks) homeworks=JSON.parse(savedHomeworks);
   if(savedHadis) hadises=JSON.parse(savedHadis);
   if(savedTopics) examTopics=JSON.parse(savedTopics);
+  if(savedStats) userStats=JSON.parse(savedStats);
+
+  // Aylık sıfırlama kontrolü
+  checkMonthlyReset();
 
   renderExams(); renderHomeworks(); renderHadis(); renderClass(); renderUpcoming(); renderExamTopics();
+  updatePomodoroStats();
+  startCountdown();
+  renderLeaderboards();
 });
+
+// Aylık sıfırlama kontrolü
+function checkMonthlyReset() {
+  const today = new Date();
+  const currentMonth = today.getMonth();
+  const currentYear = today.getFullYear();
+  
+  // Son sıfırlama tarihini kontrol et
+  const lastReset = localStorage.getItem('lastMonthlyReset');
+  
+  if (!lastReset) {
+    // İlk defa çalışıyor, sıfırla
+    resetMonthlyStats();
+    localStorage.setItem('lastMonthlyReset', `${currentYear}-${currentMonth}`);
+    return;
+  }
+  
+  const [lastYear, lastMonth] = lastReset.split('-').map(Number);
+  
+  // Ay değişmişse sıfırla
+  if (currentYear > lastYear || (currentYear === lastYear && currentMonth > lastMonth)) {
+    resetMonthlyStats();
+    localStorage.setItem('lastMonthlyReset', `${currentYear}-${currentMonth}`);
+  }
+}
+
+// Aylık istatistikleri sıfırla
+function resetMonthlyStats() {
+  Object.keys(userStats).forEach(userKey => {
+    if (userStats[userKey]) {
+      userStats[userKey].monthlyXP = 0;
+      userStats[userKey].monthlyStudyTime = 0;
+      userStats[userKey].monthlySessions = 0;
+    }
+  });
+  localStorage.setItem('userStats', JSON.stringify(userStats));
+  console.log('🔄 Aylık istatistikler sıfırlandı!');
+}
+
+// STREAK RENGİ ALMA
+function getStreakColor(streak) {
+  if (streak >= 90) return streakColors[90];
+  if (streak >= 60) return streakColors[60];
+  if (streak >= 30) return streakColors[30];
+  if (streak >= 14) return streakColors[14];
+  if (streak >= 7) return streakColors[7];
+  if (streak >= 3) return streakColors[3];
+  return streakColors[1];
+}
+
+// STREAK GÜNCELLEME
+function updateStreak() {
+  if (!currentUser) return;
+  
+  const userKey = `${currentUser.name}_${currentUser.surname}`;
+  const stats = userStats[userKey];
+  if (!stats) return;
+  
+  const today = new Date().toDateString();
+  const lastStudy = stats.lastStudyDate ? new Date(stats.lastStudyDate).toDateString() : null;
+  
+  // Bugün çalışılmış mı? (Pomodoro'dan gelen veri)
+  const todayStudy = (stats.dailyStudyTime || 0) > 0;
+  
+  if (todayStudy) {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toDateString();
+    
+    if (lastStudy === yesterdayStr) {
+      // Üst üste çalışma
+      stats.currentStreak = (stats.currentStreak || 0) + 1;
+    } else if (lastStudy !== today) {
+      // Yeni streak başladı
+      stats.currentStreak = 1;
+    }
+    
+    // En uzun streak'i güncelle
+    if (stats.currentStreak > (stats.longestStreak || 0)) {
+      stats.longestStreak = stats.currentStreak;
+    }
+    
+    stats.lastStudyDate = new Date().toISOString().split('T')[0];
+    localStorage.setItem('userStats', JSON.stringify(userStats));
+    updatePomodoroStats();
+    renderClass();
+  }
+}
 
 // Giriş
 loginBtn.addEventListener('click',()=>{
@@ -306,10 +747,40 @@ loginBtn.addEventListener('click',()=>{
     students.push({name,surname,joinDate:new Date().toLocaleString('tr-TR'),joinTimestamp:new Date().getTime()});
     localStorage.setItem('students',JSON.stringify(students));
   }
+  
+  // Kullanıcı istatistiklerini başlat
+  const userKey = `${name}_${surname}`;
+  if(!userStats[userKey]) {
+    userStats[userKey] = {
+      // Aylık istatistikler (sıfırlanır)
+      monthlyXP: 0,
+      monthlyStudyTime: 0,
+      monthlySessions: 0,
+      
+      // Toplam istatistikler (kalıcı)
+      totalXP: 0,
+      totalStudyTime: 0,
+      totalSessions: 0,
+      level: 1,
+      
+      // Streak Sistemi
+      currentStreak: 0,
+      longestStreak: 0,
+      lastStudyDate: null,
+      
+      // Diğer bilgiler
+      joinDate: new Date().toLocaleString('tr-TR'),
+      lastActive: new Date().toLocaleString('tr-TR')
+    };
+  }
+  
+  localStorage.setItem('userStats', JSON.stringify(userStats));
   localStorage.setItem('currentUser',JSON.stringify(currentUser));
   loginModal.style.display='none';
   updateUI();
   renderClass();
+  updatePomodoroStats();
+  renderLeaderboards();
 });
 
 function updateUI(){
@@ -335,6 +806,11 @@ sidebarLinks.forEach(link=>{
     if(sectionId === 'examTopics') {
       if(isAdmin) addExamTopicBtn.style.display = 'inline-block';
       else addExamTopicBtn.style.display = 'none';
+    }
+    
+    // Liderlik tablosunu güncelle
+    if(sectionId === 'leaderboard') {
+      renderLeaderboards();
     }
   });
 });
@@ -424,18 +900,58 @@ function renderHadis(){
 function renderClass(){
   const list=document.getElementById('classList'); if(!list) return;
   if(students.length===0){list.innerHTML='<p>Sınıf listesi henüz oluşturulmadı.</p>'; return;}
+  
   const sorted=[...students].sort((a,b)=>(b.joinTimestamp||0)-(a.joinTimestamp||0));
-  list.innerHTML=sorted.map((s,i)=>`<div class="student-item" style="padding:12px;margin:8px 0;background:rgba(255,255,255,0.1);border-radius:8px;border-left:4px solid var(--accent-warning);">
-    <strong>${i+1}. ${escapeHtml(s.name)} ${escapeHtml(s.surname)}</strong>
-    <small style="display:block;margin-top:4px;color:#94a3b8;">Katılma: ${s.joinDate||'Bilinmiyor'}${isAdmin?' (Admin)':''}</small>
-  </div>`).join('');
+  list.innerHTML=sorted.map((s,i)=>{
+    const userKey = `${s.name}_${s.surname}`;
+    const stats = userStats[userKey] || { 
+      level: 1, 
+      totalXP: 0, 
+      totalStudyTime: 0, 
+      monthlyXP: 0,
+      currentStreak: 0,
+      longestStreak: 0
+    };
+    
+    const level = stats.level || 1;
+    const totalXP = stats.totalXP || 0;
+    const totalTime = stats.totalStudyTime || 0;
+    const monthlyXP = stats.monthlyXP || 0;
+    const streak = stats.currentStreak || 0;
+    const longestStreak = stats.longestStreak || 0;
+    const streakColor = getStreakColor(streak);
+    
+    return `
+      <div class="student-item">
+        <strong>${i+1}. ${escapeHtml(s.name)} ${escapeHtml(s.surname)} 
+          <span class="student-level">Seviye ${level}</span>
+        </strong>
+        <div style="display: flex; align-items: center; gap: 8px; margin-top: 6px;">
+          <div style="background: ${streakColor}; 
+                      padding: 4px 10px; 
+                      border-radius: 12px; 
+                      font-size: 0.8rem;
+                      font-weight: bold;
+                      color: white;
+                      display: flex;
+                      align-items: center;
+                      gap: 4px;">
+            🔥 ${streak}
+          </div>
+          <small style="color:#94a3b8;">
+            ${Math.floor(totalXP)} XP • ${longestStreak} En Uzun
+          </small>
+        </div>
+      </div>
+    `;
+  }).join('');
 }
 
 function renderUpcoming(){
   const list=document.getElementById('upcomingList'); if(!list) return;
   const now=new Date(); let upcoming=[];
   exams.forEach(e=>{if(e.date){const diff=(new Date(e.date)-now)/(1000*60*60*24); if(diff>=0&&diff<=2) upcoming.push({type:"Sınav",title:e.title,date:e.date,importance:e.importance});}});
-  homeworks.forEach(h=>{if(h.date){constdiff=(new Date(h.date)-now)/(1000*60*60*24); if(diff>=0&&diff<=2) upcoming.push({type:"Ödev",title:h.title,date:h.date,importance:h.importance});}});
+  homeworks.forEach(h=>{if(h.date){const diff=(new Date(h.date)-now)/(1000*60*60*24); if(diff>=0&&diff<=2) upcoming.push({type:"Ödev",title:h.title,date:h.date,importance:h.importance});}});
   if(upcoming.length===0){list.innerHTML='<li>Yaklaşan sınav veya ödev bulunmamaktadır.</li>'; return;}
   list.innerHTML=upcoming.map(item=>{const imp=importanceLevels[item.importance||3]; return `<li><strong>${item.type}:</strong> ${escapeHtml(item.title)} <span class="importance-badge ${imp.class}">${imp.icon}</span> <small>(${new Date(item.date).toLocaleString('tr-TR')})</small></li>`;}).join('');
 }
@@ -451,10 +967,8 @@ function deleteItem(type,id){
   localStorage.setItem('homeworks',JSON.stringify(homeworks));
   localStorage.setItem('hadises',JSON.stringify(hadises));
 }
-
 // ---------------- Sayaç Fonksiyonu ----------------
 function startCountdown() {
-  // Ara tatil başlangıç tarihi: 7 Kasım 2025 15:40
   const targetDate = new Date("2025-11-07T15:40:00");
 
   const daysEl = document.getElementById('days');
@@ -486,12 +1000,9 @@ function startCountdown() {
     secondsEl.textContent = seconds.toString().padStart(2, "0");
   }
 
-  updateCountdown(); // Sayfa yüklendiğinde hemen göster
+  updateCountdown();
   const interval = setInterval(updateCountdown, 1000);
 }
-
-// Sayfa yüklendiğinde başlat
-window.addEventListener('load', startCountdown);
 
 // Sınav Konuları Fonksiyonları
 closeTopicModal.addEventListener('click',()=>{
@@ -662,6 +1173,332 @@ addExamTopicBtn.addEventListener('click', ()=>{
   topicExamSelect.innerHTML = '<option value="">Sınav Seçin</option>' +
     exams.map(e => `<option value="${e.id}">${escapeHtml(e.title)}</option>`).join('');
 });
+
+// POMODORO SİSTEMİ - GERÇEK ZAMANLI XP
+// Zaman seçenekleri
+timeOptions.forEach(option => {
+  option.addEventListener('click', () => {
+    timeOptions.forEach(opt => opt.classList.remove('active'));
+    option.classList.add('active');
+    selectedTime = parseInt(option.dataset.minutes);
+    currentTime = selectedTime * 60;
+    updateTimerDisplay();
+  });
+});
+
+// Timer fonksiyonları
+function updateTimerDisplay() {
+  const minutes = Math.floor(currentTime / 60);
+  const seconds = currentTime % 60;
+  pomodoroTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+function startTimer() {
+  if (isRunning) return;
+  
+  isRunning = true;
+  startPomodoro.disabled = true;
+  pausePomodoro.disabled = false;
+  startTime = Date.now(); // Başlangıç zamanını kaydet
+  earnedXP = 0; // Her başlangıçta XP'yi sıfırla
+  
+  pomodoroInterval = setInterval(() => {
+    currentTime--;
+    updateTimerDisplay();
+    
+    // GERÇEK ZAMANLI XP HESAPLAMA
+    if (startTime) {
+      const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+      earnedXP = elapsedSeconds / 60; // Her saniye 1/60 XP (1 dakika = 1 XP)
+    }
+    
+    if (currentTime <= 0) {
+      completeSession();
+    }
+  }, 1000);
+}
+
+function pauseTimer() {
+  if (!isRunning) return;
+  
+  isRunning = false;
+  clearInterval(pomodoroInterval);
+  startPomodoro.disabled = false;
+  pausePomodoro.disabled = true;
+}
+
+function resetTimer() {
+  // Reset butonuna basınca kazanılan XP'yi kaydet
+  if (earnedXP > 0.0167) { // En az 1 saniye çalışmışsa (0.0167 XP)
+    saveEarnedXP();
+  }
+  
+  pauseTimer();
+  currentTime = selectedTime * 60;
+  updateTimerDisplay();
+  startPomodoro.disabled = false;
+  pausePomodoro.disabled = true;
+  earnedXP = 0; // Resetleyince sıfırla
+}
+
+function saveEarnedXP() {
+  if (!currentUser) return;
+  
+  const userKey = `${currentUser.name}_${currentUser.surname}`;
+  if (!userStats[userKey]) {
+    userStats[userKey] = {
+      monthlyXP: 0,
+      monthlyStudyTime: 0,
+      monthlySessions: 0,
+      totalXP: 0,
+      totalStudyTime: 0,
+      totalSessions: 0,
+      level: 1,
+      currentStreak: 0,
+      longestStreak: 0,
+      lastStudyDate: null,
+      joinDate: new Date().toLocaleString('tr-TR'),
+      lastActive: new Date().toLocaleString('tr-TR')
+    };
+  }
+  
+  // Kazanılan XP'yi yuvarla ve kaydet
+  const roundedXP = Math.floor(earnedXP * 100) / 100; // 2 decimal
+  const roundedMinutes = Math.floor(earnedXP * 100) / 100; // Dakika olarak
+  
+  // Aylık istatistiklere ekle
+  userStats[userKey].monthlyStudyTime = (userStats[userKey].monthlyStudyTime || 0) + roundedMinutes;
+  userStats[userKey].monthlySessions = (userStats[userKey].monthlySessions || 0) + 1;
+  userStats[userKey].monthlyXP = (userStats[userKey].monthlyXP || 0) + roundedXP;
+  
+  // Toplam istatistiklere ekle
+  userStats[userKey].totalStudyTime = (userStats[userKey].totalStudyTime || 0) + roundedMinutes;
+  userStats[userKey].totalSessions = (userStats[userKey].totalSessions || 0) + 1;
+  userStats[userKey].totalXP = (userStats[userKey].totalXP || 0) + roundedXP;
+  
+  // Streak güncelle
+  updateStreak();
+  
+  // Seviye kontrolü (250 XP'de 1 seviye)
+  const newLevel = Math.floor((userStats[userKey].totalXP || 0) / 250) + 1;
+  if (newLevel > (userStats[userKey].level || 1)) {
+    userStats[userKey].level = newLevel;
+  }
+  
+  localStorage.setItem('userStats', JSON.stringify(userStats));
+  updatePomodoroStats();
+  renderClass();
+  renderLeaderboards();
+  
+  // Resetleme bildirimi
+  if (roundedXP >= 0.5) { // En az 30 saniye çalışmışsa
+    alert(`⏱️ ${roundedMinutes.toFixed(1)} dakika kaydedildi!\n+${roundedXP.toFixed(1)} XP kazandın!`);
+  }
+}
+
+function completeSession() {
+  pauseTimer();
+  
+  if (!currentUser) return;
+  
+  const userKey = `${currentUser.name}_${currentUser.surname}`;
+  if (!userStats[userKey]) {
+    userStats[userKey] = {
+      monthlyXP: 0,
+      monthlyStudyTime: 0,
+      monthlySessions: 0,
+      totalXP: 0,
+      totalStudyTime: 0,
+      totalSessions: 0,
+      level: 1,
+      currentStreak: 0,
+      longestStreak: 0,
+      lastStudyDate: null,
+      joinDate: new Date().toLocaleString('tr-TR'),
+      lastActive: new Date().toLocaleString('tr-TR')
+    };
+  }
+  
+  // Tam oturum XP'si (seçilen süre kadar)
+  userStats[userKey].monthlyStudyTime = (userStats[userKey].monthlyStudyTime || 0) + selectedTime;
+  userStats[userKey].monthlySessions = (userStats[userKey].monthlySessions || 0) + 1;
+  userStats[userKey].monthlyXP = (userStats[userKey].monthlyXP || 0) + selectedTime;
+  
+  userStats[userKey].totalStudyTime = (userStats[userKey].totalStudyTime || 0) + selectedTime;
+  userStats[userKey].totalSessions = (userStats[userKey].totalSessions || 0) + 1;
+  userStats[userKey].totalXP = (userStats[userKey].totalXP || 0) + selectedTime;
+  
+  // Streak güncelle
+  updateStreak();
+  
+  // Seviye kontrolü (250 XP'de 1 seviye)
+  const newLevel = Math.floor((userStats[userKey].totalXP || 0) / 250) + 1;
+  if (newLevel > (userStats[userKey].level || 1)) {
+    userStats[userKey].level = newLevel;
+    alert(`🎉 Tebrikler! Seviye ${newLevel} oldunuz! 🎉`);
+  }
+  
+  localStorage.setItem('userStats', JSON.stringify(userStats));
+  updatePomodoroStats();
+  renderClass();
+  renderLeaderboards();
+  
+  alert('🎯 Oturum tamamlandı! 🎯\n' + 
+        `+${selectedTime} XP kazandınız!\n` +
+        `Toplam: ${userStats[userKey].totalXP || 0} XP`);
+  
+  resetTimer();
+}
+
+// NAN KORUMALI XP GÜNCELLEME
+function updatePomodoroStats() {
+  if (!currentUser) return;
+  
+  const userKey = `${currentUser.name}_${currentUser.surname}`;
+  const stats = userStats[userKey];
+  
+  if (stats) {
+    // Varsayılan değerlerle NaN koruması
+    const totalXP = stats.totalXP || 0;
+    const totalStudyTime = stats.totalStudyTime || 0;
+    const monthlyXP = stats.monthlyXP || 0;
+    const level = stats.level || 1;
+    const currentStreak = stats.currentStreak || 0;
+    
+    totalStudyTimeEl.textContent = Math.floor(totalStudyTime);
+    currentLevel.textContent = level;
+    currentXP.textContent = Math.floor(totalXP);
+    currentStreakEl.textContent = currentStreak;
+    
+    // XP bar güncelleme - NaN koruması
+    const currentLevelXP = (totalXP % 250) || 0;
+    const xpPercentage = Math.min(100, Math.max(0, (currentLevelXP / 250) * 100));
+    xpProgress.style.width = `${xpPercentage}%`;
+    nextLevelXP.textContent = Math.max(0, 250 - currentLevelXP);
+  } else {
+    // Stats yoksa sıfırla
+    totalStudyTimeEl.textContent = "0";
+    currentLevel.textContent = "1";
+    currentXP.textContent = "0";
+    currentStreakEl.textContent = "0";
+    xpProgress.style.width = "0%";
+    nextLevelXP.textContent = "250";
+  }
+}
+
+// LİDERLİK TABLOLARI
+function renderLeaderboards() {
+  renderMonthlyLeaderboard();
+  renderTotalLeaderboard();
+}
+
+function renderMonthlyLeaderboard() {
+  if (!monthlyLeaderboard) return;
+  
+  // Kullanıcıları aylık XP'ye göre sırala
+  const sortedUsers = Object.entries(userStats)
+    .map(([userKey, stats]) => {
+      const [name, surname] = userKey.split('_');
+      return {
+        name,
+        surname,
+        monthlyXP: stats.monthlyXP || 0,
+        monthlyStudyTime: stats.monthlyStudyTime || 0,
+        level: stats.level || 1,
+        currentStreak: stats.currentStreak || 0
+      };
+    })
+    .sort((a, b) => b.monthlyXP - a.monthlyXP)
+    .filter(user => user.monthlyXP > 0); // Sadece XP'si olanları göster
+  
+  if (sortedUsers.length === 0) {
+    monthlyLeaderboard.innerHTML = '<p>Henüz aylık liderlik verisi yok.</p>';
+    return;
+  }
+  
+  monthlyLeaderboard.innerHTML = sortedUsers.map((user, index) => {
+    const rank = index + 1;
+    let medal = '';
+    if (rank === 1) medal = '🥇';
+    else if (rank === 2) medal = '🥈';
+    else if (rank === 3) medal = '🥉';
+    
+    const streakColor = getStreakColor(user.currentStreak);
+    
+    return `
+      <div class="leaderboard-item">
+        <div class="leaderboard-rank">${rank}</div>
+        <div class="leaderboard-info">
+          <div class="leaderboard-name">${escapeHtml(user.name)} ${escapeHtml(user.surname)} 
+            <span style="background: ${streakColor}; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; color: white;">🔥 ${user.currentStreak}</span>
+          </div>
+          <div class="leaderboard-level">${Math.floor(user.monthlyXP)} XP • ${Math.floor(user.monthlyStudyTime)} dakika</div>
+        </div>
+        <div class="leaderboard-xp">${medal}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderTotalLeaderboard() {
+  if (!totalLeaderboard) return;
+  
+  // Kullanıcıları toplam XP'ye göre sırala
+  const sortedUsers = Object.entries(userStats)
+    .map(([userKey, stats]) => {
+      const [name, surname] = userKey.split('_');
+      return {
+        name,
+        surname,
+        totalXP: stats.totalXP || 0,
+        totalStudyTime: stats.totalStudyTime || 0,
+        level: stats.level || 1,
+        currentStreak: stats.currentStreak || 0
+      };
+    })
+    .sort((a, b) => b.totalXP - a.totalXP)
+    .filter(user => user.totalXP > 0); // Sadece XP'si olanları göster
+  
+  if (sortedUsers.length === 0) {
+    totalLeaderboard.innerHTML = '<p>Henüz toplam liderlik verisi yok.</p>';
+    return;
+  }
+  
+  totalLeaderboard.innerHTML = sortedUsers.map((user, index) => {
+    const rank = index + 1;
+    let medal = '';
+    if (rank === 1) medal = '⭐';
+    else if (rank === 2) medal = '🌟';
+    else if (rank === 3) medal = '✨';
+    
+    const streakColor = getStreakColor(user.currentStreak);
+    
+    return `
+      <div class="leaderboard-item">
+        <div class="leaderboard-rank">${rank}</div>
+        <div class="leaderboard-info">
+          <div class="leaderboard-name">${escapeHtml(user.name)} ${escapeHtml(user.surname)} 
+            <span class="total-badge">Seviye ${user.level}</span>
+            <span style="background: ${streakColor}; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; color: white;">🔥 ${user.currentStreak}</span>
+          </div>
+          <div class="leaderboard-level">${Math.floor(user.totalXP)} XP • ${Math.floor(user.totalStudyTime)} dakika</div>
+        </div>
+        <div class="leaderboard-xp">${medal}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Event Listeners
+startPomodoro.addEventListener('click', startTimer);
+pausePomodoro.addEventListener('click', pauseTimer);
+resetPomodoro.addEventListener('click', resetTimer);
+
+// İlk yükleme
+updateTimerDisplay();
+
+// Sayfa her açıldığında aylık sıfırlama kontrolü
+setInterval(checkMonthlyReset, 60 * 60 * 1000); // Her saat kontrol et
 </script>
 </body>
 </html>
