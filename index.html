@@ -64,6 +64,25 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
 .importance-5{background:#dc2626; color:white;}
 .urgent-card{border-left:6px solid var(--accent-danger) !important;background:linear-gradient(135deg, var(--bg-card), rgba(220, 38, 38, 0.1)) !important;}
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+/* Sınav Konuları Özel Stilleri */
+.exam-topics-header {display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+.exam-topics-header h2 {margin:0;}
+.add-topic-btn {background:linear-gradient(135deg,#16a34a,#059669);color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;gap:5px;}
+.exam-card {background:var(--bg-card);border-radius:12px;margin-bottom:15px;border:1px solid var(--border-color);overflow:hidden;}
+.exam-header {background:linear-gradient(135deg,var(--accent-warning),var(--accent-danger));padding:15px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+.exam-header h3 {margin:0;font-size:1.2rem;}
+.exam-header .toggle-icon {transition:transform 0.3s ease;}
+.exam-header.active .toggle-icon {transform:rotate(180deg);}
+.exam-topics {padding:0;max-height:0;overflow:hidden;transition:max-height 0.3s ease,padding 0.3s ease;}
+.exam-topics.active {padding:15px 20px;max-height:1000px;}
+.topic-item {padding:10px;margin:8px 0;background:rgba(255,255,255,0.05);border-radius:6px;border-left:3px solid var(--accent-success);}
+.topic-item:last-child {margin-bottom:0;}
+.topics-input-container {margin-bottom:15px;}
+.topic-input-group {display:flex;gap:10px;margin-bottom:10px;align-items:center;}
+.topic-input {flex:1;}
+.add-topic-input-btn {background:#3b82f6;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;width:auto;font-size:12px;}
+.remove-topic-btn {background:var(--accent-danger);color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;width:auto;font-size:12px;}
 </style>
 </head>
 <body>
@@ -93,6 +112,7 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
   <a href="#" data-section="homeworks"><i class="fas fa-tasks"></i> Ödevler</a>
   <a href="#" data-section="hadis"><i class="fas fa-book"></i> Hadis-i Şerifler</a>
   <a href="#" data-section="class"><i class="fas fa-users"></i> Sınıf Listesi</a>
+  <a href="#" data-section="examTopics"><i class="fas fa-list-alt"></i> Sınav Konuları</a>
   <a href="#" id="adminSwitch"><i class="fas fa-user-shield"></i> Admin Profiline Geçiş Yap</a>
 </div>
 
@@ -143,6 +163,18 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
       <div class="class-list" id="classList"><p>Sınıf listesi yükleniyor...</p></div>
     </div>
   </div>
+  
+  <div id="examTopics" class="content">
+    <div class="exam-topics-header">
+      <h2 class="countdown-title">Sınav Konuları</h2>
+      <button id="addExamTopicBtn" class="add-topic-btn" style="display:none;">
+        <i class="fas fa-plus"></i> Konu Ekle
+      </button>
+    </div>
+    <div id="examTopicsList">
+      <div class="card"><p>Henüz sınav konusu eklenmedi.</p></div>
+    </div>
+  </div>
 </div>
 
 <div class="add-btn" id="addBtn"><i class="fas fa-plus"></i></div>
@@ -170,6 +202,33 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
   </div>
 </div>
 
+<!-- Sınav Konuları Ekleme Modalı -->
+<div id="addTopicModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeTopicModal">&times;</span>
+    <h2>Yeni Sınav Konusu Ekle</h2>
+    <select id="topicExamSelect">
+      <option value="">Sınav Seçin</option>
+    </select>
+    
+    <div class="topics-input-container">
+      <div id="topicsInputs">
+        <div class="topic-input-group">
+          <input type="text" class="topic-input" placeholder="Konu başlığı">
+          <button type="button" class="remove-topic-btn" onclick="removeTopicInput(this)" style="display:none;">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      
+      <button type="button" class="add-topic-input-btn" id="addTopicInputBtn">
+        <i class="fas fa-plus"></i> Konu Ekle (Maksimum: 10)
+      </button>
+    </div>
+    
+    <button id="saveTopicBtn">Kaydet</button>
+  </div>
+</div>
 <script>
 // Önem seviyeleri
 const importanceLevels = {
@@ -182,7 +241,7 @@ const importanceLevels = {
 
 // Veriler
 let students=[], currentUser=null, isAdmin=false, nextId=100;
-let exams=[], homeworks=[], hadises=[];
+let exams=[], homeworks=[], hadises=[], examTopics=[];
 
 // DOM
 const loginModal=document.getElementById('loginModal');
@@ -203,6 +262,16 @@ const closeAddModal=document.getElementById('closeAddModal');
 const saveContentBtn=document.getElementById('saveContentBtn');
 const adminSwitch=document.getElementById('adminSwitch');
 
+// Sınav konuları DOM
+const examTopicsList=document.getElementById('examTopicsList');
+const addTopicModal=document.getElementById('addTopicModal');
+const closeTopicModal=document.getElementById('closeTopicModal');
+const saveTopicBtn=document.getElementById('saveTopicBtn');
+const topicExamSelect=document.getElementById('topicExamSelect');
+const addExamTopicBtn=document.getElementById('addExamTopicBtn');
+const addTopicInputBtn=document.getElementById('addTopicInputBtn');
+const topicsInputs=document.getElementById('topicsInputs');
+
 // Yükleme
 window.addEventListener('load',()=>{
   const savedUser=localStorage.getItem('currentUser');
@@ -210,6 +279,7 @@ window.addEventListener('load',()=>{
   const savedExams=localStorage.getItem('exams');
   const savedHomeworks=localStorage.getItem('homeworks');
   const savedHadis=localStorage.getItem('hadises');
+  const savedTopics=localStorage.getItem('examTopics');
 
   if(savedUser){
     currentUser=JSON.parse(savedUser);
@@ -220,8 +290,9 @@ window.addEventListener('load',()=>{
   if(savedExams) exams=JSON.parse(savedExams);
   if(savedHomeworks) homeworks=JSON.parse(savedHomeworks);
   if(savedHadis) hadises=JSON.parse(savedHadis);
+  if(savedTopics) examTopics=JSON.parse(savedTopics);
 
-  renderExams(); renderHomeworks(); renderHadis(); renderClass(); renderUpcoming();
+  renderExams(); renderHomeworks(); renderHadis(); renderClass(); renderUpcoming(); renderExamTopics();
 });
 
 // Giriş
@@ -259,6 +330,12 @@ sidebarLinks.forEach(link=>{
     sections.forEach(sec=>sec.classList.remove('active'));
     document.getElementById(sectionId).classList.add('active');
     sidebar.classList.remove('active');overlay.classList.remove('active');
+    
+    // Sınav konuları bölümüne geçişte admin kontrolü
+    if(sectionId === 'examTopics') {
+      if(isAdmin) addExamTopicBtn.style.display = 'inline-block';
+      else addExamTopicBtn.style.display = 'none';
+    }
   });
 });
 
@@ -358,7 +435,7 @@ function renderUpcoming(){
   const list=document.getElementById('upcomingList'); if(!list) return;
   const now=new Date(); let upcoming=[];
   exams.forEach(e=>{if(e.date){const diff=(new Date(e.date)-now)/(1000*60*60*24); if(diff>=0&&diff<=2) upcoming.push({type:"Sınav",title:e.title,date:e.date,importance:e.importance});}});
-  homeworks.forEach(h=>{if(h.date){const diff=(new Date(h.date)-now)/(1000*60*60*24); if(diff>=0&&diff<=2) upcoming.push({type:"Ödev",title:h.title,date:h.date,importance:h.importance});}});
+  homeworks.forEach(h=>{if(h.date){constdiff=(new Date(h.date)-now)/(1000*60*60*24); if(diff>=0&&diff<=2) upcoming.push({type:"Ödev",title:h.title,date:h.date,importance:h.importance});}});
   if(upcoming.length===0){list.innerHTML='<li>Yaklaşan sınav veya ödev bulunmamaktadır.</li>'; return;}
   list.innerHTML=upcoming.map(item=>{const imp=importanceLevels[item.importance||3]; return `<li><strong>${item.type}:</strong> ${escapeHtml(item.title)} <span class="importance-badge ${imp.class}">${imp.icon}</span> <small>(${new Date(item.date).toLocaleString('tr-TR')})</small></li>`;}).join('');
 }
@@ -374,6 +451,7 @@ function deleteItem(type,id){
   localStorage.setItem('homeworks',JSON.stringify(homeworks));
   localStorage.setItem('hadises',JSON.stringify(hadises));
 }
+
 // ---------------- Sayaç Fonksiyonu ----------------
 function startCountdown() {
   // Ara tatil başlangıç tarihi: 7 Kasım 2025 15:40
@@ -414,6 +492,176 @@ function startCountdown() {
 
 // Sayfa yüklendiğinde başlat
 window.addEventListener('load', startCountdown);
+
+// Sınav Konuları Fonksiyonları
+closeTopicModal.addEventListener('click',()=>{
+  addTopicModal.style.display='none';
+  resetTopicInputs();
+});
+window.addEventListener('click', (e)=>{
+  if(e.target===addTopicModal){
+    addTopicModal.style.display='none';
+    resetTopicInputs();
+  }
+});
+
+// Konu input'larını sıfırla
+function resetTopicInputs() {
+  topicsInputs.innerHTML = `
+    <div class="topic-input-group">
+      <input type="text" class="topic-input" placeholder="Konu başlığı">
+      <button type="button" class="remove-topic-btn" onclick="removeTopicInput(this)" style="display:none;">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  `;
+}
+
+// Konu input'u ekle
+addTopicInputBtn.addEventListener('click', () => {
+  const currentInputs = topicsInputs.querySelectorAll('.topic-input-group');
+  if (currentInputs.length >= 10) {
+    alert('Maksimum 10 konu ekleyebilirsiniz!');
+    return;
+  }
+  
+  const newInputGroup = document.createElement('div');
+  newInputGroup.className = 'topic-input-group';
+  newInputGroup.innerHTML = `
+    <input type="text" class="topic-input" placeholder="Konu başlığı">
+    <button type="button" class="remove-topic-btn" onclick="removeTopicInput(this)">
+      <i class="fas fa-times"></i>
+    </button>
+  `;
+  topicsInputs.appendChild(newInputGroup);
+});
+
+// Konu input'u sil
+function removeTopicInput(button) {
+  const inputGroups = topicsInputs.querySelectorAll('.topic-input-group');
+  if (inputGroups.length > 1) {
+    button.parentElement.remove();
+  }
+}
+
+// Konuları kaydet
+saveTopicBtn.addEventListener('click', ()=>{
+  const examId = topicExamSelect.value;
+  const topicInputs = topicsInputs.querySelectorAll('.topic-input');
+  
+  if(!examId){alert('Lütfen sınav seçin!'); return;}
+  
+  const topics = [];
+  topicInputs.forEach(input => {
+    const title = input.value.trim();
+    if(title) {
+      topics.push(title);
+    }
+  });
+  
+  if(topics.length === 0){alert('Lütfen en az bir konu girin!'); return;}
+  
+  // Mevcut konuları kontrol et ve ekle
+  const exam = exams.find(e => e.id == examId);
+  if(exam) {
+    topics.forEach(topic => {
+      examTopics.push({
+        id: nextId++,
+        examId: Number(examId),
+        examTitle: exam.title,
+        title: topic,
+        desc: ""
+      });
+    });
+    
+    localStorage.setItem('examTopics', JSON.stringify(examTopics));
+    resetTopicInputs();
+    topicExamSelect.value = '';
+    addTopicModal.style.display = 'none';
+    renderExamTopics();
+    alert('Konular başarıyla eklendi!');
+  }
+});
+
+// Render Fonksiyonu
+function renderExamTopics(){
+  if(exams.length === 0){
+    examTopicsList.innerHTML = '<div class="card"><p>Henüz sınav eklenmedi.</p></div>';
+    return;
+  }
+  
+  if(examTopics.length === 0){
+    examTopicsList.innerHTML = '<div class="card"><p>Henüz sınav konusu eklenmedi.</p></div>';
+    return;
+  }
+
+  let html = '';
+  
+  // Sınavlara göre grupla
+  const examsWithTopics = {};
+  examTopics.forEach(topic => {
+    if(!examsWithTopics[topic.examId]) {
+      examsWithTopics[topic.examId] = {
+        exam: exams.find(e => e.id === topic.examId),
+        topics: []
+      };
+    }
+    examsWithTopics[topic.examId].topics.push(topic);
+  });
+
+  // Sınavları tarihe göre sırala
+  Object.values(examsWithTopics)
+    .sort((a, b) => new Date(a.exam.date) - new Date(b.exam.date))
+    .forEach(({exam, topics}) => {
+      html += `
+        <div class="exam-card">
+          <div class="exam-header" onclick="toggleTopics(this)">
+            <h3>${escapeHtml(exam.title)}</h3>
+            <div class="toggle-icon">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+          <div class="exam-topics">
+            ${topics.map(topic => `
+              <div class="topic-item">
+                <strong>${escapeHtml(topic.title)}</strong>
+                ${topic.desc ? `<p>${escapeHtml(topic.desc)}</p>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    });
+  
+  examTopicsList.innerHTML = html;
+}
+
+// Konuları aç/kapa
+function toggleTopics(header) {
+  const topics = header.nextElementSibling;
+  const isActive = topics.classList.contains('active');
+  
+  // Tüm konuları kapat
+  document.querySelectorAll('.exam-topics').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.exam-header').forEach(h => h.classList.remove('active'));
+  
+  // Tıklananı aç
+  if(!isActive) {
+    topics.classList.add('active');
+    header.classList.add('active');
+  }
+}
+
+// Butona tıklayınca modal aç
+addExamTopicBtn.addEventListener('click', ()=>{
+  if(exams.length === 0){
+    alert("Önce sınav ekleyin!");
+    return;
+  }
+  addTopicModal.style.display = 'flex';
+  topicExamSelect.innerHTML = '<option value="">Sınav Seçin</option>' +
+    exams.map(e => `<option value="${e.id}">${escapeHtml(e.title)}</option>`).join('');
+});
 </script>
 </body>
 </html>
