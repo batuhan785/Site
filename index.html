@@ -370,4 +370,50 @@ function deleteItem(type,id){
   else if(type==="homework"){homeworks=homeworks.filter(h=>h.id!==id); renderHomeworks();}
   else if(type==="hadis"){hadises=hadises.filter(h=>h.id!==id); renderHadis();}
   renderUpcoming();
-  localStorage.setItem('exams',JSON.
+  localStorage.setItem('exams',JSON.stringify(exams));
+  localStorage.setItem('homeworks',JSON.stringify(homeworks));
+  localStorage.setItem('hadises',JSON.stringify(hadises));
+}
+// ---------------- Sayaç Fonksiyonu ----------------
+function startCountdown() {
+  // Ara tatil başlangıç tarihi: 7 Kasım 2025 15:40
+  const targetDate = new Date("2025-11-07T15:40:00");
+
+  const daysEl = document.getElementById('days');
+  const hoursEl = document.getElementById('hours');
+  const minutesEl = document.getElementById('minutes');
+  const secondsEl = document.getElementById('seconds');
+
+  function updateCountdown() {
+    const now = new Date();
+    const diff = targetDate - now;
+
+    if (diff <= 0) {
+      daysEl.textContent = "00";
+      hoursEl.textContent = "00";
+      minutesEl.textContent = "00";
+      secondsEl.textContent = "00";
+      clearInterval(interval);
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    daysEl.textContent = days.toString().padStart(2, "0");
+    hoursEl.textContent = hours.toString().padStart(2, "0");
+    minutesEl.textContent = minutes.toString().padStart(2, "0");
+    secondsEl.textContent = seconds.toString().padStart(2, "0");
+  }
+
+  updateCountdown(); // Sayfa yüklendiğinde hemen göster
+  const interval = setInterval(updateCountdown, 1000);
+}
+
+// Sayfa yüklendiğinde başlat
+window.addEventListener('load', startCountdown);
+</script>
+</body>
+</html>
