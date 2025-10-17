@@ -7,46 +7,62 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins','Segoe UI',sans-serif;}
-body{background:linear-gradient(135deg,#1a2a6c,#b21f1f,#fdbb2d);color:#fff;min-height:100vh;overflow-x:hidden;}
+:root {
+  --primary-dark: #1e3a8a;
+  --accent-warning: #f59e0b;
+  --accent-danger: #dc2626;
+  --accent-success: #059669;
+  --bg-dark: #0f172a;
+  --bg-card: #1e293b;
+  --text-light: #f8fafc;
+  --border-color: #334155;
+}
+body{background:linear-gradient(135deg, var(--bg-dark), #1e3a8a, #0f766e);color:var(--text-light);min-height:100vh;overflow-x:hidden;}
 .login-modal{display:flex;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.8);align-items:center;justify-content:center;}
-.login-content{background:rgba(0,0,0,0.9);padding:30px;border-radius:15px;width:90%;max-width:400px;border:2px solid #fdbb2d;text-align:center;}
-.login-content h2{margin-bottom:20px;color:#fdbb2d;}
-.login-content input{padding:12px;margin:10px 0;width:100%;border-radius:8px;border:1px solid #fdbb2d;background:rgba(255,255,255,0.1);color:white;}
-.login-btn{background:linear-gradient(135deg,#fdbb2d,#b21f1f);color:white;border:none;padding:12px;width:100%;border-radius:8px;cursor:pointer;margin-top:10px;font-size:16px;}
-header{background:rgba(0,0,0,0.7);padding:14px 18px;display:flex;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,0.5);position:sticky;top:0;z-index:100;backdrop-filter:blur(8px);}
-.menu-btn{font-size:24px;cursor:pointer;margin-right:12px;color:#fdbb2d;}
+.login-content{background:var(--bg-card);padding:30px;border-radius:15px;width:90%;max-width:400px;border:2px solid var(--accent-warning);text-align:center;}
+.login-content h2{margin-bottom:20px;color:var(--accent-warning);}
+.login-content input{padding:12px;margin:10px 0;width:100%;border-radius:8px;border:1px solid var(--accent-warning);background:rgba(255,255,255,0.1);color:white;}
+.login-btn{background:linear-gradient(135deg,var(--accent-warning),var(--accent-danger));color:white;border:none;padding:12px;width:100%;border-radius:8px;cursor:pointer;margin-top:10px;font-size:16px;}
+header{background:rgba(15, 23, 42, 0.9);padding:14px 18px;display:flex;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,0.5);position:sticky;top:0;z-index:100;backdrop-filter:blur(8px);border-bottom:1px solid var(--border-color);}
+.menu-btn{font-size:24px;cursor:pointer;margin-right:12px;color:var(--accent-warning);}
 .header-title{flex:1;text-align:center;font-size:1.45rem;font-weight:600;}
-.user-info{margin-left:auto;font-size:0.9rem;color:#fdbb2d;text-align:right;}
+.user-info{margin-left:auto;font-size:0.9rem;color:var(--accent-warning);text-align:right;cursor:pointer;}
 .user-info small{display:block;font-size:0.7rem;color:#ccc;}
-.sidebar{width:280px;background:rgba(0,0,0,0.85);position:fixed;top:0;left:-280px;height:100%;padding-top:70px;transition:left .28s ease;z-index:200;overflow-y:auto;backdrop-filter:blur(10px);}
+.sidebar{width:260px;background:var(--bg-card);position:fixed;top:0;left:-260px;height:100%;padding-top:70px;transition:left .3s ease;z-index:200;overflow-y:auto;backdrop-filter:blur(10px);border-right:1px solid var(--border-color);}
 .sidebar.active{left:0;}
-.sidebar a{display:block;color:#fff;padding:15px 20px;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.1);transition:background .3s;}
-.sidebar a:hover{background:rgba(253,187,45,0.2);}
-.sidebar i{margin-right:10px;width:20px;text-align:center;}
-.overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.45);z-index:150;}
+.sidebar a{display:block;color:var(--text-light);padding:15px 20px;text-decoration:none;border-bottom:1px solid var(--border-color);}
+.sidebar a:hover{background:rgba(245,158,11,0.15);}
+.overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:150;}
 .overlay.active{display:block;}
 .container{padding:22px;max-width:1100px;margin:0 auto;}
-.countdown-container{width:100%;background:rgba(255,255,255,0.08);border-radius:18px;padding:26px;margin-bottom:26px;box-shadow:0 10px 30px rgba(0,0,0,0.28);border:1px solid rgba(255,255,255,0.14);text-align:center;}
-.countdown-title{font-size:1.75rem;margin-bottom:18px;font-weight:700;color:#fdbb2d;}
-.countdown-row{display:flex;gap:14px;justify-content:center;}
-.countdown-item{background:rgba(255,255,255,0.12);padding:18px 12px;border-radius:14px;display:flex;flex-direction:column;align-items:center;min-width:64px;}
-.countdown-item span.value{font-size:2.1rem;font-weight:800;color:#fdbb2d;}
+.countdown-container{width:100%;background:var(--bg-card);border-radius:18px;padding:26px;margin-bottom:26px;box-shadow:0 10px 30px rgba(0,0,0,0.28);border:1px solid var(--border-color);text-align:center;}
+.countdown-title{font-size:1.75rem;margin-bottom:18px;font-weight:700;color:var(--accent-warning);}
+.countdown-row{display:flex;gap:14px;justify-content:center;margin-bottom:10px;}
+.countdown-item{background:rgba(255,255,255,0.08);padding:18px 12px;border-radius:14px;display:flex;flex-direction:column;align-items:center;min-width:64px;border:1px solid var(--border-color);}
+.countdown-item span.value{font-size:2.1rem;font-weight:800;color:var(--accent-warning);}
 .countdown-item label{margin-top:6px;font-size:0.95rem;color:rgba(255,255,255,0.92);}
-.holiday-info{font-size:1.05rem;margin-top:16px;color:#fdbb2d;font-weight:600;}
-.content{display:none;animation:fadeIn .45s ease;}
+.holiday-info{font-size:1.05rem;margin-top:16px;color:var(--accent-warning);font-weight:600;}
+.content{display:none;animation:fadeIn .4s ease;}
 .content.active{display:block;}
-.card{background:rgba(255,255,255,0.08);padding:22px;margin:18px 0;border-radius:14px;border:1px solid rgba(255,255,255,0.12);position:relative;}
-.card h3{margin-bottom:12px;font-size:1.35rem;border-left:6px solid #fdbb2d;padding-left:12px;}
-.delete-btn{position:absolute;top:12px;right:12px;background:rgba(178,31,31,0.85);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;}
-.add-btn{position:fixed;bottom:28px;right:22px;width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#fdbb2d 0%,#b21f1f 100%);display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;z-index:120;}
-input,select,textarea{padding:14px;width:100%;border-radius:10px;margin-bottom:14px;background:rgba(255,255,255,0.08);color:white;border:1px solid rgba(255,255,255,0.18);}
-button{background:linear-gradient(135deg,#fdbb2d 0%,#b21f1f 100%);color:white;border:none;padding:12px;width:100%;border-radius:10px;font-size:15px;cursor:pointer;}
-.class-list{margin-top:20px;}
-.student-item{padding:12px;margin:8px 0;background:rgba(255,255,255,0.1);border-radius:8px;border-left:4px solid #fdbb2d;}
+.card{background:var(--bg-card);padding:22px;margin:18px 0;border-radius:14px;border:1px solid var(--border-color);position:relative;}
+.card h3{margin-bottom:12px;font-size:1.35rem;border-left:6px solid var(--accent-warning);padding-left:12px;}
+.delete-btn{position:absolute;top:12px;right:12px;background:var(--accent-danger);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;color:white;}
+.add-btn{position:fixed;bottom:28px;right:22px;width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--accent-warning),var(--accent-danger));display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;z-index:120;box-shadow:0 4px 20px rgba(245, 158, 11, 0.3);border:none;color:white;}
+input,select,textarea{padding:14px;width:100%;border-radius:10px;margin-bottom:14px;background:var(--bg-card);color:white;border:1px solid var(--border-color);}
+button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-danger));color:white;border:none;padding:12px;width:100%;border-radius:10px;font-size:15px;cursor:pointer;}
 .modal{display:none;position:fixed;z-index:300;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.7);align-items:center;justify-content:center;}
-.modal-content{background-color:rgba(0,0,0,0.85);padding:25px;border-radius:12px;width:90%;max-width:500px;border:1px solid rgba(255,255,255,0.15);backdrop-filter:blur(10px);}
-.close{color:#fdbb2d;float:right;font-size:28px;font-weight:bold;cursor:pointer;}
+.modal-content{background-color:var(--bg-card);padding:25px;border-radius:12px;width:90%;max-width:500px;border:1px solid var(--border-color);backdrop-filter:blur(10px);}
+.close{color:var(--accent-warning);float:right;font-size:28px;font-weight:bold;cursor:pointer;}
 #upcomingList li{margin:10px 0;padding:12px;background:rgba(255,255,255,0.06);border-radius:8px;list-style:none;}
+
+/* ÖNEM PUANI STİLLERİ */
+.importance-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;font-size:0.8rem;margin-left:8px;}
+.importance-1{background:#6b7280; color:white;}
+.importance-2{background:#3b82f6; color:white;}
+.importance-3{background:#f59e0b; color:black;}
+.importance-4{background:#ef4444; color:white;}
+.importance-5{background:#dc2626; color:white;}
+.urgent-card{border-left:6px solid var(--accent-danger) !important;background:linear-gradient(135deg, var(--bg-card), rgba(220, 38, 38, 0.1)) !important;}
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 </style>
 </head>
@@ -64,6 +80,7 @@ button{background:linear-gradient(135deg,#fdbb2d 0%,#b21f1f 100%);color:white;bo
 </div>
 
 <div class="overlay" id="overlay"></div>
+
 <header>
   <div class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></div>
   <div class="header-title">Öğrenci Portalı</div>
@@ -73,10 +90,10 @@ button{background:linear-gradient(135deg,#fdbb2d 0%,#b21f1f 100%);color:white;bo
 <div class="sidebar" id="sidebar">
   <a href="#" data-section="home"><i class="fas fa-home"></i> Ana Sayfa</a>
   <a href="#" data-section="exams"><i class="fas fa-file-alt"></i> Sınavlar</a>
-  <a href="#" data-section="hadis"><i class="fas fa-book"></i> Hadis-i Şerifler</a>
   <a href="#" data-section="homeworks"><i class="fas fa-tasks"></i> Ödevler</a>
+  <a href="#" data-section="hadis"><i class="fas fa-book"></i> Hadis-i Şerifler</a>
   <a href="#" data-section="class"><i class="fas fa-users"></i> Sınıf Listesi</a>
-  <a href="#" data-section="schedule"><i class="fas fa-calendar-alt"></i> Ders Programı</a>
+  <a href="#" id="adminSwitch"><i class="fas fa-user-shield"></i> Admin Profiline Geçiş Yap</a>
 </div>
 
 <div class="container">
@@ -91,7 +108,10 @@ button{background:linear-gradient(135deg,#fdbb2d 0%,#b21f1f 100%);color:white;bo
       </div>
       <div class="holiday-info">7-14 Kasım 2025</div>
     </div>
-    <div class="card"><h3>Hoş Geldiniz!</h3><p id="welcomeMessage">Sol üstten menüye tıklayarak diğer bölümlere erişebilirsiniz.</p></div>
+    <div class="card">
+      <h3>Hoş Geldiniz!</h3>
+      <p id="welcomeMessage">Sol üstten menüye tıklayarak diğer bölümlere erişebilirsiniz.</p>
+    </div>
     
     <!-- YAKLAŞAN SINAVLAR/ÖDEVLER -->
     <div class="card" id="upcomingCard">
@@ -100,35 +120,27 @@ button{background:linear-gradient(135deg,#fdbb2d 0%,#b21f1f 100%);color:white;bo
     </div>
   </div>
 
-  <!-- SINAVLAR BÖLÜMÜ -->
   <div id="exams" class="content">
     <h2 class="countdown-title">Sınavlar</h2>
     <div id="examList"></div>
   </div>
 
-  <!-- HADİS-İ ŞERİFLER BÖLÜMÜ -->
-  <div id="hadis" class="content">
-    <h2 class="countdown-title">Hadis-i Şerifler</h2>
-    <div id="hadisList"></div>
-  </div>
-
-  <!-- ÖDEVLER BÖLÜMÜ -->
   <div id="homeworks" class="content">
     <h2 class="countdown-title">Ödevler</h2>
     <div id="homeworkList"></div>
   </div>
 
-  <div id="class" class="content">
-    <h2 class="countdown-title">Sınıf Listesi</h2>
-    <div class="card"><div class="class-list" id="classList"><p>Sınıf listesi yok.</p></div></div>
+  <div id="hadis" class="content">
+    <h2 class="countdown-title">Hadis-i Şerifler</h2>
+    <div id="hadisList">
+      <div class="card"><p>Henüz hadis eklenmedi.</p></div>
+    </div>
   </div>
 
-  <div id="schedule" class="content">
-    <h2 class="countdown-title">Ders Programı</h2>
+  <div id="class" class="content">
+    <h2 class="countdown-title">Sınıf Listesi</h2>
     <div class="card">
-      <h3>GitHub'dan Ders Programı</h3>
-      <button id="loadScheduleBtn">Ders Programını Göster</button>
-      <img id="scheduleImage" style="display:none;max-width:100%;border-radius:10px;margin-top:16px;">
+      <div class="class-list" id="classList"><p>Sınıf listesi yükleniyor...</p></div>
     </div>
   </div>
 </div>
@@ -141,361 +153,221 @@ button{background:linear-gradient(135deg,#fdbb2d 0%,#b21f1f 100%);color:white;bo
     <h2>Yeni İçerik Ekle</h2>
     <select id="contentType">
       <option value="exam">Sınav</option>
-      <option value="hadis">Hadis-i Şerif</option>
       <option value="homework">Ödev</option>
+      <option value="hadis">Hadis-i Şerif</option>
     </select>
     <input type="text" id="contentTitle" placeholder="Başlık">
     <textarea id="contentDesc" placeholder="Açıklama"></textarea>
     <input type="datetime-local" id="contentDate">
-    <button id="addContentBtn">Ekle</button>
+    <select id="contentImportance">
+      <option value="1">⭐ Düşük Önem</option>
+      <option value="2">⭐⭐ Orta Önem</option>
+      <option value="3" selected>⭐⭐⭐ Yüksek Önem</option>
+      <option value="4">⭐⭐⭐⭐ Çok Yüksek</option>
+      <option value="5">⭐⭐⭐⭐⭐ KRİTİK</option>
+    </select>
+    <button id="saveContentBtn">Kaydet</button>
   </div>
 </div>
 
 <script>
+// Önem seviyeleri
+const importanceLevels = {
+  1:{label:"Düşük", icon:"⭐", class:"importance-1"},
+  2:{label:"Orta", icon:"⭐⭐", class:"importance-2"},
+  3:{label:"Yüksek", icon:"⭐⭐⭐", class:"importance-3"},
+  4:{label:"Çok Yüksek", icon:"⭐⭐⭐⭐", class:"importance-4"},
+  5:{label:"KRİTİK", icon:"⭐⭐⭐⭐⭐", class:"importance-5"}
+};
+
 // Veriler
-let students = [], currentUser = null, nextId = 1;
-let exams = [], homeworks = [], hadisler = [
-  {id: 0, title: "İlim Öğrenmek", content: "Kim ilim tahsil etmek için bir yola girerse, Allah da onu cennete giden yollardan birine sokar.", kaynak: "Müslim, Zikir, 39"},
-  {id: 1, title: "Güzel Ahlak", content: "Müminlerin iman bakımından en olgunu, ahlakı en güzel olanıdır.", kaynak: "Tirmizî, Radâʻ 11"}
-];
+let students=[], currentUser=null, isAdmin=false, nextId=100;
+let exams=[], homeworks=[], hadises=[];
 
-const GITHUB_SCHEDULE_URL = "Site/IMG-20250921-WA0016 (1).jpg at main · batuhan785/Site https://share.google/cLuUWRHprzw7efgrL";
-const holidayStart = new Date(2025, 10, 7, 0, 0, 0);
+// DOM
+const loginModal=document.getElementById('loginModal');
+const loginBtn=document.getElementById('loginBtn');
+const studentName=document.getElementById('studentName');
+const studentSurname=document.getElementById('studentSurname');
+const userInfo=document.getElementById('userInfo');
+const userName=document.getElementById('userName');
+const welcomeMessage=document.getElementById('welcomeMessage');
+const sidebar=document.getElementById('sidebar');
+const menuBtn=document.getElementById('menuBtn');
+const overlay=document.getElementById('overlay');
+const sections=document.querySelectorAll('.content');
+const sidebarLinks=document.querySelectorAll('.sidebar a[data-section]');
+const addBtn=document.getElementById('addBtn');
+const addModal=document.getElementById('addModal');
+const closeAddModal=document.getElementById('closeAddModal');
+const saveContentBtn=document.getElementById('saveContentBtn');
+const adminSwitch=document.getElementById('adminSwitch');
 
-// DOM elemanları
-const loginModal = document.getElementById('loginModal'),
-      studentName = document.getElementById('studentName'),
-      studentSurname = document.getElementById('studentSurname'),
-      loginBtn = document.getElementById('loginBtn'),
-      userInfo = document.getElementById('userInfo'),
-      userName = document.getElementById('userName'),
-      welcomeMessage = document.getElementById('welcomeMessage'),
-      menuBtn = document.getElementById('menuBtn'),
-      overlay = document.getElementById('overlay'),
-      sidebar = document.getElementById('sidebar'),
-      addBtn = document.getElementById('addBtn'),
-      addModal = document.getElementById('addModal'),
-      closeAddModal = document.getElementById('closeAddModal'),
-      addContentBtn = document.getElementById('addContentBtn'),
-      sidebarLinks = document.querySelectorAll('.sidebar a[data-section]'),
-      scheduleImage = document.getElementById('scheduleImage'),
-      loadScheduleBtn = document.getElementById('loadScheduleBtn'),
-      classList = document.getElementById('classList');
+// Yükleme
+window.addEventListener('load',()=>{
+  const savedUser=localStorage.getItem('currentUser');
+  const savedStudents=localStorage.getItem('students');
+  const savedExams=localStorage.getItem('exams');
+  const savedHomeworks=localStorage.getItem('homeworks');
+  const savedHadis=localStorage.getItem('hadises');
 
-// Sayfa yüklendiğinde
-window.addEventListener('load', () => {
-  const savedUser = localStorage.getItem('currentUser');
-  const savedStudents = localStorage.getItem('students');
-  const savedExams = localStorage.getItem('exams');
-  const savedHomeworks = localStorage.getItem('homeworks');
-  const savedHadisler = localStorage.getItem('hadisler');
-  
-  if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-    loginModal.style.display = 'none';
+  if(savedUser){
+    currentUser=JSON.parse(savedUser);
+    loginModal.style.display='none';
     updateUI();
   }
-  
-  if (savedStudents) students = JSON.parse(savedStudents);
-  if (savedExams) exams = JSON.parse(savedExams);
-  if (savedHomeworks) homeworks = JSON.parse(savedHomeworks);
-  if (savedHadisler) hadisler = JSON.parse(savedHadisler);
-  
-  renderClass();
-  renderExams();
-  renderHomeworks();
-  renderHadisler();
-  renderUpcoming();
+  if(savedStudents) students=JSON.parse(savedStudents);
+  if(savedExams) exams=JSON.parse(savedExams);
+  if(savedHomeworks) homeworks=JSON.parse(savedHomeworks);
+  if(savedHadis) hadises=JSON.parse(savedHadis);
+
+  renderExams(); renderHomeworks(); renderHadis(); renderClass(); renderUpcoming();
 });
 
-// Giriş butonu
-loginBtn.addEventListener('click', () => {
-  const name = studentName.value.trim(),
-        surname = studentSurname.value.trim();
-  
-  if (!name || !surname) {
-    alert('Ad ve soyad girin!');
-    return;
+// Giriş
+loginBtn.addEventListener('click',()=>{
+  const name=studentName.value.trim();
+  const surname=studentSurname.value.trim();
+  if(!name||!surname){alert("Lütfen ad ve soyad girin!");return;}
+  currentUser={name,surname};
+  const existingStudent=students.find(s=>s.name.toLowerCase()===name.toLowerCase()&&s.surname.toLowerCase()===surname.toLowerCase());
+  if(!existingStudent){
+    students.push({name,surname,joinDate:new Date().toLocaleString('tr-TR'),joinTimestamp:new Date().getTime()});
+    localStorage.setItem('students',JSON.stringify(students));
   }
-  
-  currentUser = { name, surname, loginTime: new Date().toLocaleString() };
-  
-  // Öğrenci listesine ekle (eğer yoksa)
-  if (!students.find(s => s.name.toLowerCase() === name.toLowerCase() && s.surname.toLowerCase() === surname.toLowerCase())) {
-    students.push(currentUser);
-    localStorage.setItem('students', JSON.stringify(students));
-  }
-  
-  localStorage.setItem('currentUser', JSON.stringify(currentUser));
-  loginModal.style.display = 'none';
+  localStorage.setItem('currentUser',JSON.stringify(currentUser));
+  loginModal.style.display='none';
   updateUI();
   renderClass();
 });
 
-function updateUI() {
-  if (currentUser) {
-    userInfo.style.display = 'block';
-    userName.textContent = currentUser.name + " " + currentUser.surname;
-    welcomeMessage.textContent = `Hoş geldiniz ${currentUser.name} ${currentUser.surname}! Portalınıza hoş geldiniz.`;
+function updateUI(){
+  if(currentUser){
+    userInfo.style.display='block';
+    userName.textContent=isAdmin?"Admin":`${currentUser.name} ${currentUser.surname}`;
+    welcomeMessage.textContent=isAdmin?`Hoş geldiniz Admin!`:`Hoş geldiniz ${currentUser.name} ${currentUser.surname}! Portalınıza hoş geldiniz.`;
   }
 }
 
-function renderClass() {
-  if (!classList) return;
-  
-  if (students.length === 0) {
-    classList.innerHTML = '<p>Sınıf listesi yok.</p>';
-    return;
-  }
-  
-  classList.innerHTML = students.map((s, i) => 
-    `<div class="student-item">
-      <strong>${i + 1}. ${s.name} ${s.surname}</strong>
-      <small><br>Katılma Tarihi: ${s.loginTime}</small>
-    </div>`
-  ).join('');
-}
-
-// SINAVLARI RENDER ET
-function renderExams() {
-  const list = document.getElementById('examList');
-  if (!list) return;
-  
-  if (exams.length === 0) {
-    list.innerHTML = '<p>Henüz sınav eklenmedi.</p>';
-    return;
-  }
-  
-  list.innerHTML = exams.map(exam => `
-    <div class="card">
-      <div class="delete-btn" onclick="deleteItem('exam', ${exam.id})">
-        <i class="fas fa-times"></i>
-      </div>
-      <h3>${escapeHtml(exam.title)}</h3>
-      <p>${escapeHtml(exam.desc)}</p>
-      <p><strong>Tarih:</strong> ${exam.date ? new Date(exam.date).toLocaleString('tr-TR') : '-'}</p>
-    </div>
-  `).join('');
-  
-  localStorage.setItem('exams', JSON.stringify(exams));
-  renderUpcoming();
-}
-
-// ÖDEVLERİ RENDER ET
-function renderHomeworks() {
-  const list = document.getElementById('homeworkList');
-  if (!list) return;
-  
-  if (homeworks.length === 0) {
-    list.innerHTML = '<p>Henüz ödev eklenmedi.</p>';
-    return;
-  }
-  
-  list.innerHTML = homeworks.map(homework => `
-    <div class="card">
-      <div class="delete-btn" onclick="deleteItem('homework', ${homework.id})">
-        <i class="fas fa-times"></i>
-      </div>
-      <h3>${escapeHtml(homework.title)}</h3>
-      <p>${escapeHtml(homework.desc)}</p>
-      <p><strong>Teslim Tarihi:</strong> ${homework.date ? new Date(homework.date).toLocaleString('tr-TR') : '-'}</p>
-    </div>
-  `).join('');
-  
-  localStorage.setItem('homeworks', JSON.stringify(homeworks));
-  renderUpcoming();
-}
-
-// HADİSLERİ RENDER ET
-function renderHadisler() {
-  const list = document.getElementById('hadisList');
-  if (!list) return;
-  
-  if (hadisler.length === 0) {
-    list.innerHTML = '<p>Henüz hadis eklenmedi.</p>';
-    return;
-  }
-  
-  list.innerHTML = hadisler.map(hadis => `
-    <div class="card">
-      <div class="delete-btn" onclick="deleteItem('hadis', ${hadis.id})">
-        <i class="fas fa-times"></i>
-      </div>
-      <h3>${escapeHtml(hadis.title)}</h3>
-      <p>${escapeHtml(hadis.content)}</p>
-      ${hadis.kaynak ? `<p><em>Kaynak: ${escapeHtml(hadis.kaynak)}</em></p>` : ''}
-    </div>
-  `).join('');
-  
-  localStorage.setItem('hadisler', JSON.stringify(hadisler));
-}
-
-// YAKLAŞAN SINAV/ÖDEV LİSTESİ
-function renderUpcoming() {
-  const list = document.getElementById('upcomingList');
-  if (!list) return;
-  
-  const now = new Date();
-  let upcoming = [];
-  
-  // 2 gün içindeki sınavları bul
-  exams.forEach(exam => {
-    if (exam.date) {
-      const diff = (new Date(exam.date) - now) / (1000 * 60 * 60 * 24);
-      if (diff >= 0 && diff <= 2) {
-        upcoming.push({
-          type: "Sınav",
-          title: exam.title,
-          date: exam.date
-        });
-      }
-    }
-  });
-  
-  // 2 gün içindeki ödevleri bul
-  homeworks.forEach(homework => {
-    if (homework.date) {
-      const diff = (new Date(homework.date) - now) / (1000 * 60 * 60 * 24);
-      if (diff >= 0 && diff <= 2) {
-        upcoming.push({
-          type: "Ödev",
-          title: homework.title,
-          date: homework.date
-        });
-      }
-    }
-  });
-  
-  if (upcoming.length === 0) {
-    list.innerHTML = '<li>Yaklaşan sınav veya ödev bulunmamaktadır.</li>';
-    return;
-  }
-  
-  list.innerHTML = upcoming.map(item => `
-    <li>
-      <strong>${item.type}:</strong> ${escapeHtml(item.title)} 
-      <small>(${new Date(item.date).toLocaleString('tr-TR')})</small>
-    </li>
-  `).join('');
-}
-
-// SİLME FONKSİYONU
-function deleteItem(type, id) {
-  if (type === "exam") {
-    exams = exams.filter(e => e.id !== id);
-    renderExams();
-  } else if (type === "homework") {
-    homeworks = homeworks.filter(h => h.id !== id);
-    renderHomeworks();
-  } else if (type === "hadis") {
-    hadisler = hadisler.filter(h => h.id !== id);
-    renderHadisler();
-  }
-}
-window.deleteItem = deleteItem;
-
-// Ders programı yükleme
-loadScheduleBtn.addEventListener('click', () => {
-  scheduleImage.src = GITHUB_SCHEDULE_URL;
-  scheduleImage.style.display = "block";
-});
-
-// Menü işlevleri
-menuBtn.addEventListener('click', () => {
-  sidebar.classList.toggle('active');
-  overlay.classList.toggle('active');
-});
-
-overlay.addEventListener('click', () => {
-  sidebar.classList.remove('active');
-  overlay.classList.remove('active');
-});
-
-// Sekme değiştirme
-sidebarLinks.forEach(link => {
-  link.addEventListener('click', e => {
+// Menü
+menuBtn.addEventListener('click',()=>{sidebar.classList.toggle('active');overlay.classList.toggle('active');});
+overlay.addEventListener('click',()=>{sidebar.classList.remove('active');overlay.classList.remove('active');});
+sidebarLinks.forEach(link=>{
+  link.addEventListener('click',e=>{
     e.preventDefault();
-    document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
-    document.getElementById(link.dataset.section).classList.add('active');
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
+    const sectionId=link.getAttribute('data-section');
+    sections.forEach(sec=>sec.classList.remove('active'));
+    document.getElementById(sectionId).classList.add('active');
+    sidebar.classList.remove('active');overlay.classList.remove('active');
   });
 });
 
-// Modal işlevleri
-addBtn.addEventListener('click', () => {
-  if (!currentUser) {
-    alert('Önce giriş yapın!');
-    loginModal.style.display = 'flex';
-    return;
-  }
-  addModal.style.display = 'flex';
+// Admin girişi
+adminSwitch.addEventListener('click',()=>{
+  const pass=prompt("Admin şifresini girin:");
+  if(pass==="Gityazarkandayım"){isAdmin=true;updateUI(); renderClass();}
+  else alert("Şifre yanlış!");
 });
 
-closeAddModal.addEventListener('click', () => addModal.style.display = 'none');
-
-window.addEventListener('click', e => {
-  if (e.target === addModal) addModal.style.display = 'none';
+// EKLE
+addBtn.addEventListener('click',()=>{
+  if(!currentUser){alert('Lütfen önce giriş yapın!'); loginModal.style.display='flex';return;}
+  if(!isAdmin){alert('Sadece admin içerik ekleyebilir!'); return;}
+  addModal.style.display='flex';
 });
 
-// İçerik ekleme
-addContentBtn.addEventListener('click', () => {
-  const type = document.getElementById('contentType').value,
-        title = document.getElementById('contentTitle').value.trim(),
-        desc = document.getElementById('contentDesc').value.trim(),
-        date = document.getElementById('contentDate').value;
-  
-  if (!title) {
-    alert('Başlık girin!');
-    return;
-  }
-  
-  if (type === "exam") {
-    exams.push({ id: nextId++, title, desc, date });
-    renderExams();
-  } else if (type === "hadis") {
-    hadisler.push({ id: nextId++, title, content: desc, kaynak: date });
-    renderHadisler();
-  } else if (type === "homework") {
-    homeworks.push({ id: nextId++, title, desc, date });
-    renderHomeworks();
-  }
-  
-  // Formu temizle
-  document.getElementById('contentTitle').value = "";
-  document.getElementById('contentDesc').value = "";
-  document.getElementById('contentDate').value = "";
-  addModal.style.display = 'none';
+closeAddModal.addEventListener('click',()=>{addModal.style.display='none';});
+window.addEventListener('click',(e)=>{if(e.target===addModal){addModal.style.display='none';}});
+
+saveContentBtn.addEventListener('click',()=>{
+  const type=document.getElementById('contentType').value;
+  const title=document.getElementById('contentTitle').value.trim();
+  const desc=document.getElementById('contentDesc').value.trim();
+  const date=document.getElementById('contentDate').value;
+  const importance=parseInt(document.getElementById('contentImportance').value);
+  if(!title){alert('Başlık girin!'); return;}
+  if(type==="exam"){exams.push({id:nextId++,title,desc,date,importance}); renderExams();}
+  else if(type==="homework"){homeworks.push({id:nextId++,title,desc,date,importance}); renderHomeworks();}
+  else if(type==="hadis"){hadises.push({id:nextId++,title,desc,date,importance}); renderHadis();}
+  document.getElementById('contentTitle').value='';
+  document.getElementById('contentDesc').value='';
+  document.getElementById('contentDate').value='';
+  addModal.style.display='none';
 });
 
-// Geri sayım
-function updateCountdown() {
-  const now = new Date(),
-        diff = holidayStart - now;
-  
-  if (diff <= 0) return;
-  
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24)),
-        hours = Math.floor((diff / (1000 * 60 * 60)) % 24),
-        minutes = Math.floor((diff / 1000 / 60) % 60),
-        seconds = Math.floor((diff / 1000) % 60);
-  
-  document.getElementById('days').textContent = String(days).padStart(2, '0');
-  document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-  document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-  document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+// YENİ FONKSİYONLAR
+function escapeHtml(text){return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+function renderExams(){
+  const list=document.getElementById('examList'); if(!list) return;
+  if(exams.length===0){list.innerHTML='<div class="card"><p>Henüz sınav eklenmedi.</p></div>'; return;}
+  list.innerHTML=exams.map(exam=>{
+    const imp=importanceLevels[exam.importance||3];
+    const urgent=isItemUrgent(exam.date);
+    return `<div class="card ${urgent?'urgent-card':''}">
+      ${isAdmin?`<button class="delete-btn" onclick="deleteItem('exam',${exam.id})"><i class="fas fa-times"></i></button>`:''}
+      <h3>${escapeHtml(exam.title)} <span class="importance-badge ${imp.class}">${imp.icon} ${imp.label}</span>${urgent?'<span style="color:var(--accent-danger);margin-left:8px;">🚨 SON GÜN!</span>':''}</h3>
+      <p>${escapeHtml(exam.desc)}</p>
+      <p><strong>Tarih:</strong> ${exam.date?new Date(exam.date).toLocaleString('tr-TR'):'-'}</p>
+    </div>`;
+  }).join('');
+  localStorage.setItem('exams',JSON.stringify(exams));
 }
 
-// Güvenlik fonksiyonu
-function escapeHtml(text) {
-  if (!text) return '';
-  return String(text).replace(/[&<>"']/g, function(m) {
-    return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m];
-  });
+function renderHomeworks(){
+  const list=document.getElementById('homeworkList'); if(!list) return;
+  if(homeworks.length===0){list.innerHTML='<div class="card"><p>Henüz ödev eklenmedi.</p></div>'; return;}
+  list.innerHTML=homeworks.map(hw=>{
+    const imp=importanceLevels[hw.importance||2];
+    const urgent=isItemUrgent(hw.date);
+    return `<div class="card ${urgent?'urgent-card':''}">
+      ${isAdmin?`<button class="delete-btn" onclick="deleteItem('homework',${hw.id})"><i class="fas fa-times"></i></button>`:''}
+      <h3>${escapeHtml(hw.title)} <span class="importance-badge ${imp.class}">${imp.icon} ${imp.label}</span>${urgent?'<span style="color:var(--accent-danger);margin-left:8px;">🚨 SON GÜN!</span>':''}</h3>
+      <p>${escapeHtml(hw.desc)}</p>
+      <p><strong>Teslim Tarihi:</strong> ${hw.date?new Date(hw.date).toLocaleString('tr-TR'):'-'}</p>
+    </div>`;
+  }).join('');
+  localStorage.setItem('homeworks',JSON.stringify(homeworks));
 }
 
-setInterval(updateCountdown, 1000);
-updateCountdown();
-</script>
-</body>
-</html>
+function renderHadis(){
+  const list=document.getElementById('hadisList'); if(!list) return;
+  if(hadises.length===0){list.innerHTML='<div class="card"><p>Henüz hadis eklenmedi.</p></div>'; return;}
+  list.innerHTML=hadises.map(hd=>{
+    const imp=importanceLevels[hd.importance||3];
+    return `<div class="card">
+      ${isAdmin?`<button class="delete-btn" onclick="deleteItem('hadis',${hd.id})"><i class="fas fa-times"></i></button>`:''}
+      <h3>${escapeHtml(hd.title)} <span class="importance-badge ${imp.class}">${imp.icon} ${imp.label}</span></h3>
+      <p>${escapeHtml(hd.desc)}</p>
+    </div>`;
+  }).join('');
+  localStorage.setItem('hadises',JSON.stringify(hadises));
+}
+
+function renderClass(){
+  const list=document.getElementById('classList'); if(!list) return;
+  if(students.length===0){list.innerHTML='<p>Sınıf listesi henüz oluşturulmadı.</p>'; return;}
+  const sorted=[...students].sort((a,b)=>(b.joinTimestamp||0)-(a.joinTimestamp||0));
+  list.innerHTML=sorted.map((s,i)=>`<div class="student-item" style="padding:12px;margin:8px 0;background:rgba(255,255,255,0.1);border-radius:8px;border-left:4px solid var(--accent-warning);">
+    <strong>${i+1}. ${escapeHtml(s.name)} ${escapeHtml(s.surname)}</strong>
+    <small style="display:block;margin-top:4px;color:#94a3b8;">Katılma: ${s.joinDate||'Bilinmiyor'}${isAdmin?' (Admin)':''}</small>
+  </div>`).join('');
+}
+
+function renderUpcoming(){
+  const list=document.getElementById('upcomingList'); if(!list) return;
+  const now=new Date(); let upcoming=[];
+  exams.forEach(e=>{if(e.date){const diff=(new Date(e.date)-now)/(1000*60*60*24); if(diff>=0&&diff<=2) upcoming.push({type:"Sınav",title:e.title,date:e.date,importance:e.importance});}});
+  homeworks.forEach(h=>{if(h.date){const diff=(new Date(h.date)-now)/(1000*60*60*24); if(diff>=0&&diff<=2) upcoming.push({type:"Ödev",title:h.title,date:h.date,importance:h.importance});}});
+  if(upcoming.length===0){list.innerHTML='<li>Yaklaşan sınav veya ödev bulunmamaktadır.</li>'; return;}
+  list.innerHTML=upcoming.map(item=>{const imp=importanceLevels[item.importance||3]; return `<li><strong>${item.type}:</strong> ${escapeHtml(item.title)} <span class="importance-badge ${imp.class}">${imp.icon}</span> <small>(${new Date(item.date).toLocaleString('tr-TR')})</small></li>`;}).join('');
+}
+
+function isItemUrgent(date){if(!date) return false; const now=new Date(); const diff=(new Date(date)-now)/(1000*60*60*24); return diff>=0&&diff<=1;}
+
+function deleteItem(type,id){
+  if(type==="exam"){exams=exams.filter(e=>e.id!==id); renderExams();}
+  else if(type==="homework"){homeworks=homeworks.filter(h=>h.id!==id); renderHomeworks();}
+  else if(type==="hadis"){hadises=hadises.filter(h=>h.id!==id); renderHadis();}
+  renderUpcoming();
+  localStorage.setItem('exams',JSON.
