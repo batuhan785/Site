@@ -555,13 +555,44 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
 
 <script>
 const firebaseConfig = {
-  apiKey: "AIzaSyCQdXsTb6BwH6grbDndGIikibjk-PtkfuI",
-  authDomain: "ogrenciportali-3556c.firebaseapp.com",
-  projectId: "ogrenciportali-3556c",
-  storageBucket: "ogrenciportali-3556c.firebasestorage.app",
-  messagingSenderId: "796688422959",
-  appId: "1:796688422959:web:58ba81eb06b6a704ba0eda"
+  apiKey: "AIzaSyC7r7pdPPaWmUDoiqLmxfUROnvjrYaqcgk",
+  authDomain: "ogrenciportali-3f15d.firebaseapp.com",
+  databaseURL: "https://ogrenciportali-3f15d-default-rtdb.firebaseio.com",
+  projectId: "ogrenciportali-3f15d",
+  storageBucket: "ogrenciportali-3f15d.firebasestorage.app",
+  messagingSenderId: "468574692779",
+  appId: "1:468574692779:web:d4f4ca45d2387a80929eee"
 };
+
+// Firebase'i başlat
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// 🔄 FIREBASE SYNC SİSTEMİ
+class FirebaseSync {
+    constructor() {
+        this.unsubscribe = null;
+    }
+
+    // Tüm verileri Firebase'e kaydet
+    async saveAllData() {
+        try {
+            const dataToSave = {
+                exams: exams,
+                homeworks: homeworks, 
+                hadises: hadises,
+                examTopics: examTopics,
+                students: students,
+                userStats: userStats,
+                currentUser: currentUser,
+                lastUpdated: new Date().toISOString()
+            };
+
+            await db.collection('portalData').doc('main').set(dataToSave);
+            console.log('✅ Firebase e kaydedildi');
+        } catch (error) {
+            console.log('❌ Firebase kayıt hatası:', error);
+        }
 
 // Önem seviyeleri
 const importanceLevels = {
