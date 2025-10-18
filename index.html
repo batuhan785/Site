@@ -529,7 +529,7 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
 <div id="addTopicModal" class="modal">
   <div class="modal-content">
     <span class="close" id="closeTopicModal">&times;</span>
-    <h2>Yeni Sınav Konusu Ekle</h2>
+ <h2>Yeni Sınav Konusu Ekle</h2>
     <select id="topicExamSelect">
       <option value="">Sınav Seçin</option>
     </select>
@@ -554,6 +554,231 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
 </div>
 
 <script>
+// 🔥 DEĞİŞKENLER - MEVCUT KODLA UYUMLU
+// =====================================
+
+let exams = [];
+let homeworks = [];
+let hadises = [];
+let examTopics = [];
+let students = [];
+let userStats = {};
+let currentUser = null;
+let isAdmin = false;
+let nextId = 100;
+let examSortType = "importance-date";
+
+// Pomodoro değişkenleri
+let pomodoroInterval = null;
+let currentTime = 30 * 60;
+let isRunning = false;
+let selectedTime = 30;
+let earnedXP = 0;
+let startTime = null;
+
+// 🔥 CSV SYNC SİSTEMİ - TEK PARÇA
+// ================================
+
+const SHEET_ID = '2PACX-1vRxCtTP4WsZ0yB9HJjY_rWKtUdHWRiDrO16I-UgLxkudGCxlHdYsgF3_ymBMa7DmsQYs20nZu-GXZ9P';
+const GID = '0'; 
+const CSV_URL = `https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pub?gid=${GID}&single=true&output=csv`;
+
+class CsvSync {
+    constructor() {
+        this.sheetData = null;
+        this.lastFetch = null;
+    }
+
+    async fetchFromSheets() {
+        try {
+            console.log('📥 CSV verisi çekiliyor...');
+            const response = await fetch(CSV_URL);
+            const csvText = await response.text();
+            
+            this.sheetData = this.parseCSVData(csvText);
+            this.lastFetch = new Date().toLocaleString('tr-TR');
+            
+            console.log('✅ CSV verisi alındı:', this.sheetData);
+            return this.sheetData;
+        } catch (error) {
+            console.error('❌ CSV verisi alınamadı:', error);
+            return null;
+        }
+    }
+
+    parseCSVData(csvText) {
+        if (!csvText) return [];
+        const lines = csvText.split(/\r\n|\n/);
+        if (lines.length < 2) return [];
+
+        const separator = (csvText.indexOf('\t') !== -1) ? '\t' : ',';
+        const headers = lines[0].split(separator).map(header => header.trim().toLowerCase());
+
+        const result = [];
+        
+        for (let i = 1; i < lines.length; i++) {
+            if (!lines[i].trim()) continue;
+            const values = lines[i].split(separator);
+            const rowData = {};
+            let isEmptyRow = true;
+
+            headers.forEach((header, index) => {
+                const value = values[index] ? values[index].trim() : '';
+                rowData[header] = value;
+                if (value) isEmptyRow = false;
+            });
+
+            if (!isEmptyRow && rowData.type) {
+                result.push(rowData);
+            }
+        }
+        return result;
+    }
+
+    processSheetData(sheetData) {
+        if (!sheetData || sheetData.length === 0) return;
+
+        console.log('🔄 Sheets verisi işleniyor...', sheetData);
+
+        const sheetExams = sheetData.filter(row => row.type === 'exam').map(row => ({
+            id: parseInt(row.id) || Date.now() + Math.random(),
+            title: row.title || '',
+            desc: row.desc || '',
+            date: row.date || null,
+            importance: parseInt(row.importance) || 3
+        }));
+
+        const sheetHomeworks = sheetData.filter(row => row.type === 'homework').map(row => ({
+            id: parseInt(row.id) || Date.now() + Math.random(),
+            title: row.title || '',
+            desc: row.desc || '',
+            date: row.date || null,
+            importance: parseInt(row.importance) || null
+        }));
+
+        const sheetHadises = sheetData.filter(row => row.type === 'hadis').map(row => ({
+            id: parseInt(row.id) || Date.now() + Math.random(),
+            title: row.title || '',
+            desc: row.desc || '',
+            date: row.date || null,
+            importance: parseInt(row.importance) || null
+        }));
+
+        const sheetStudents = sheetData.filter(row => row.type === 'student').map(row => ({
+            name: row.name || '',
+            surname: row.surname || '',
+            joinDate: row.joindate || new Date().toLocaleString('tr-TR'),
+            joinTimestamp: parseInt(row.jointimestamp) || Date.now()
+        }));
+
+        console.log('📊 İşlenen veriler:', {
+            exams: sheetExams.length,
+            homeworks: sheetHomeworks.length,
+            hadises: sheetHadises.length,
+            students: sheetStudents.length
+        });
+
+        if (sheetExams.length > 0) {
+            exams = sheetExams;
+            localStorage.setItem('exams', JSON.stringify(exams));
+            console.log('✅ Sınavlar güncellendi:', exams);
+        }
+        
+        if (sheetHomeworks.length > 0) {
+            homeworks = sheetHomeworks;
+            localStorage.setItem('homeworks', JSON.stringify(homeworks));
+            console.log('✅ Ödevler güncellendi:', homeworks);
+        }
+        
+        if (sheetHadises.length > 0) {
+            hadises = sheetHadises;
+            localStorage.setItem('hadises', JSON.stringify(hadises));
+            console.log('✅ Hadisler güncellendi:', hadises);
+        }
+        
+        if (sheetStudents.length > 0) {
+            students = sheetStudents;
+            localStorage.setItem('students', JSON.stringify(students));
+            console.log('✅ Öğrenciler güncellendi:', students);
+        }
+
+        this.updateUI();
+        console.log('🔄 Sheets verisi işlendi');
+    }
+
+    updateUI() {
+        if (window.renderExams) {
+            renderExams();
+            console.log('✅ Sınavlar render edildi');
+        }
+        if (window.renderHomeworks) {
+            renderHomeworks();
+            console.log('✅ Ödevler render edildi');
+        }
+        if (window.renderHadis) {
+            renderHadis();
+            console.log('✅ Hadisler render edildi');
+        }
+        if (window.renderClass) {
+            renderClass();
+            console.log('✅ Sınıf render edildi');
+        }
+        if (window.renderExamTopics) renderExamTopics();
+        if (window.renderUpcoming) renderUpcoming();
+        if (window.renderLeaderboards) renderLeaderboards();
+        if (window.updatePomodoroStats) updatePomodoroStats();
+    }
+
+    async manualSync() {
+        const sheetData = await this.fetchFromSheets();
+        if (sheetData) {
+            this.processSheetData(sheetData);
+            alert(`✅ Google Sheets verisi alındı!\n\nSon güncelleme: ${this.lastFetch}\n\n📊 İstatistikler:\n- ${sheetData.filter(r => r.type === 'exam').length} sınav\n- ${sheetData.filter(r => r.type === 'homework').length} ödev\n- ${sheetData.filter(r => r.type === 'hadis').length} hadis\n- ${sheetData.filter(r => r.type === 'student').length} öğrenci`);
+        } else {
+            alert('❌ Google Sheets verisi alınamadı!\n\nLütfen internet bağlantınızı kontrol edin.');
+        }
+    }
+
+    async autoSync() {
+        const sheetData = await this.fetchFromSheets();
+        if (sheetData) {
+            this.processSheetData(sheetData);
+        }
+    }
+}
+
+const csvSync = new CsvSync();
+
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        csvSync.autoSync();
+    }, 2000);
+});
+
+function setupSyncButton() {
+    const header = document.querySelector('header');
+    if (!header) return;
+    if (document.getElementById('syncButton')) return;
+
+    const syncBtn = document.createElement('button');
+    syncBtn.id = 'syncButton';
+    syncBtn.innerHTML = '🔄';
+    syncBtn.style.background = 'none';
+    syncBtn.style.border = 'none';
+    syncBtn.style.color = 'var(--accent-warning)';
+    syncBtn.style.fontSize = '20px';
+    syncBtn.style.marginLeft = '10px';
+    syncBtn.style.cursor = 'pointer';
+    syncBtn.title = 'Google Sheets Sync';
+    
+    syncBtn.addEventListener('click', () => {
+        csvSync.manualSync();
+    });
+    
+    header.appendChild(syncBtn);
+}
+
+document.addEventListener('DOMContentLoaded', setupSyncButton);
 // Önem seviyeleri
 const importanceLevels = {
   1:{label:"Düşük", icon:"⭐", class:"importance-1"},
