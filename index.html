@@ -568,32 +568,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// 🔄 FIREBASE SYNC SİSTEMİ
-class FirebaseSync {
-    constructor() {
-        this.unsubscribe = null;
-    }
-
-    // Tüm verileri Firebase'e kaydet
-    async saveAllData() {
-        try {
-            const dataToSave = {
-                exams: exams,
-                homeworks: homeworks, 
-                hadises: hadises,
-                examTopics: examTopics,
-                students: students,
-                userStats: userStats,
-                currentUser: currentUser,
-                lastUpdated: new Date().toISOString()
-            };
-
-            await db.collection('portalData').doc('main').set(dataToSave);
-            console.log('✅ Firebase e kaydedildi');
-        } catch (error) {
-            console.log('❌ Firebase kayıt hatası:', error);
-        }
-
 // Önem seviyeleri
 const importanceLevels = {
   1:{label:"Düşük", icon:"⭐", class:"importance-1"},
