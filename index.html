@@ -571,6 +571,9 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+  // Firebase Firestore'u import et ve başlat
+import { getFirestore } from "firebase/firestore";
+const db = getFirestore(app);
 // Önem seviyeleri
 const importanceLevels = {
     1:{label:"Düşük", icon:"⭐", class:"importance-1"},
