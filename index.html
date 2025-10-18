@@ -315,6 +315,32 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
   margin-left: 8px;
 }
 
+/* SYNC BUTONU STİLLERİ */
+.sync-button {
+  background: linear-gradient(135deg, var(--accent-warning), var(--accent-danger));
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+  transition: all 0.3s ease;
+  margin-left: 15px;
+}
+
+.sync-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+
+.sync-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 </style>
 </head>
@@ -554,8 +580,8 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
 </div>
 
 <script>
-// 🔥 GOOGLE SHEETS SYNC SİSTEMİ - GÜNCEL
-// ============================================
+// 🔥 GOOGLE SHEETS SYNC SİSTEMİ - TAM ENTEGRE
+// ==============================================
 
 const SHEET_ID = '1UVpxOHs92qbRLestRIGuUfUYQ58NVJn3AJALSwiPPfY';
 const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
@@ -617,6 +643,7 @@ class GoogleSheetsSync {
 
         console.log('🔄 Sheets verisi işleniyor...', sheetData);
 
+        // SINAVLAR
         const sheetExams = sheetData.filter(row => row.type === 'exam').map(row => ({
             id: parseInt(row.id) || Date.now() + Math.random(),
             title: row.title || '',
@@ -625,6 +652,7 @@ class GoogleSheetsSync {
             importance: parseInt(row.importance) || 3
         }));
 
+        // ÖDEVLER
         const sheetHomeworks = sheetData.filter(row => row.type === 'homework').map(row => ({
             id: parseInt(row.id) || Date.now() + Math.random(),
             title: row.title || '',
@@ -633,6 +661,7 @@ class GoogleSheetsSync {
             importance: parseInt(row.importance) || null
         }));
 
+        // HADİSLER
         const sheetHadises = sheetData.filter(row => row.type === 'hadis').map(row => ({
             id: parseInt(row.id) || Date.now() + Math.random(),
             title: row.title || '',
@@ -641,6 +670,7 @@ class GoogleSheetsSync {
             importance: parseInt(row.importance) || null
         }));
 
+        // ÖĞRENCİLER
         const sheetStudents = sheetData.filter(row => row.type === 'student').map(row => ({
             name: row.name || '',
             surname: row.surname || '',
@@ -648,35 +678,97 @@ class GoogleSheetsSync {
             joinTimestamp: parseInt(row.jointimestamp) || Date.now()
         }));
 
+        // ⭐ SINAV KONULARI - YENİ EKLENDİ
+        const sheetExamTopics = sheetData.filter(row => row.type === 'examtopic').map(row => ({
+            id: parseInt(row.id) || Date.now() + Math.random(),
+            examId: parseInt(row.examid) || 0,
+            examTitle: row.examtitle || '',
+            title: row.topic || '',
+            desc: row.desc || ''
+        }));
+
+        // ⭐ LİDERLİK VERİLERİ - GÜNCELLENDİ
+        const sheetLeaders = sheetData.filter(row => row.type === 'leaderboard').map(row => ({
+            name: row.name || '',
+            surname: row.surname || '',
+            totalXP: parseInt(row.totalxp) || 0,
+            totalStudyTime: parseInt(row.totalstudytime) || 0,
+            monthlyXP: parseInt(row.monthlyxp) || 0,
+            monthlyStudyTime: parseInt(row.monthlystudytime) || 0,
+            level: parseInt(row.level) || 1,
+            currentStreak: parseInt(row.currentstreak) || 0,
+            lastUpdate: row.lastupdate || new Date().toLocaleString('tr-TR')
+        }));
+
         console.log('📊 İşlenen veriler:', {
             exams: sheetExams.length,
             homeworks: sheetHomeworks.length,
             hadises: sheetHadises.length,
-            students: sheetStudents.length
+            students: sheetStudents.length,
+            examTopics: sheetExamTopics.length,
+            leaders: sheetLeaders.length
         });
 
+        // VERİLERİ GÜNCELLE
         if (sheetExams.length > 0) {
             exams = sheetExams;
             localStorage.setItem('exams', JSON.stringify(exams));
-            console.log('✅ Sınavlar güncellendi:', exams);
         }
         
         if (sheetHomeworks.length > 0) {
             homeworks = sheetHomeworks;
             localStorage.setItem('homeworks', JSON.stringify(homeworks));
-            console.log('✅ Ödevler güncellendi:', homeworks);
         }
         
         if (sheetHadises.length > 0) {
             hadises = sheetHadises;
             localStorage.setItem('hadises', JSON.stringify(hadises));
-            console.log('✅ Hadisler güncellendi:', hadises);
         }
         
         if (sheetStudents.length > 0) {
             students = sheetStudents;
             localStorage.setItem('students', JSON.stringify(students));
-            console.log('✅ Öğrenciler güncellendi:', students);
+        }
+
+        // ⭐ SINAV KONULARINI GÜNCELLE
+        if (sheetExamTopics.length > 0) {
+            examTopics = sheetExamTopics;
+            localStorage.setItem('examTopics', JSON.stringify(examTopics));
+            console.log('✅ Sınav konuları güncellendi:', sheetExamTopics);
+        }
+
+        // ⭐ LİDERLİK VERİLERİNİ GÜNCELLE
+        if (sheetLeaders.length > 0) {
+            sheetLeaders.forEach(leader => {
+                const userKey = `${leader.name}_${leader.surname}`;
+                if (!userStats[userKey]) {
+                    userStats[userKey] = {
+                        monthlyXP: 0,
+                        monthlyStudyTime: 0,
+                        monthlySessions: 0,
+                        totalXP: 0,
+                        totalStudyTime: 0,
+                        totalSessions: 0,
+                        level: 1,
+                        currentStreak: 0,
+                        longestStreak: 0,
+                        lastStudyDate: null,
+                        joinDate: new Date().toLocaleString('tr-TR'),
+                        lastActive: new Date().toLocaleString('tr-TR')
+                    };
+                }
+                
+                // Sheets'ten gelen verilerle güncelle
+                userStats[userKey].totalXP = leader.totalXP || userStats[userKey].totalXP;
+                userStats[userKey].totalStudyTime = leader.totalStudyTime || userStats[userKey].totalStudyTime;
+                userStats[userKey].monthlyXP = leader.monthlyXP || userStats[userKey].monthlyXP;
+                userStats[userKey].monthlyStudyTime = leader.monthlyStudyTime || userStats[userKey].monthlyStudyTime;
+                userStats[userKey].level = leader.level || userStats[userKey].level;
+                userStats[userKey].currentStreak = leader.currentStreak || userStats[userKey].currentStreak;
+            });
+            
+            localStorage.setItem('userStats', JSON.stringify(userStats));
+            console.log('✅ Liderlik verileri güncellendi:', sheetLeaders);
         }
 
         this.updateUI();
@@ -684,22 +776,10 @@ class GoogleSheetsSync {
     }
 
     updateUI() {
-        if (window.renderExams) {
-            renderExams();
-            console.log('✅ Sınavlar render edildi');
-        }
-        if (window.renderHomeworks) {
-            renderHomeworks();
-            console.log('✅ Ödevler render edildi');
-        }
-        if (window.renderHadis) {
-            renderHadis();
-            console.log('✅ Hadisler render edildi');
-        }
-        if (window.renderClass) {
-            renderClass();
-            console.log('✅ Sınıf render edildi');
-        }
+        if (window.renderExams) renderExams();
+        if (window.renderHomeworks) renderHomeworks();
+        if (window.renderHadis) renderHadis();
+        if (window.renderClass) renderClass();
         if (window.renderExamTopics) renderExamTopics();
         if (window.renderUpcoming) renderUpcoming();
         if (window.renderLeaderboards) renderLeaderboards();
@@ -710,7 +790,7 @@ class GoogleSheetsSync {
         const sheetData = await this.fetchFromSheets();
         if (sheetData) {
             this.processSheetData(sheetData);
-            alert(`✅ Google Sheets verisi alındı!\n\nSon güncelleme: ${this.lastFetch}\n\n📊 İstatistikler:\n- ${sheetData.filter(r => r.type === 'exam').length} sınav\n- ${sheetData.filter(r => r.type === 'homework').length} ödev\n- ${sheetData.filter(r => r.type === 'hadis').length} hadis\n- ${sheetData.filter(r => r.type === 'student').length} öğrenci`);
+            alert(`✅ Google Sheets verisi alındı!\n\nSon güncelleme: ${this.lastFetch}\n\n📊 İstatistikler:\n- ${sheetData.filter(r => r.type === 'exam').length} sınav\n- ${sheetData.filter(r => r.type === 'homework').length} ödev\n- ${sheetData.filter(r => r.type === 'hadis').length} hadis\n- ${sheetData.filter(r => r.type === 'student').length} öğrenci\n- ${sheetData.filter(r => r.type === 'examtopic').length} sınav konusu\n- ${sheetData.filter(r => r.type === 'leaderboard').length} lider`);
         } else {
             alert('❌ Google Sheets verisi alınamadı!\n\nLütfen internet bağlantınızı kontrol edin.');
         }
@@ -726,7 +806,7 @@ class GoogleSheetsSync {
 
 const googleSync = new GoogleSheetsSync();
 
-// Sync butonu ekleme
+// Sync butonu ekleme - GÜNCELLENDİ
 function setupSyncButton() {
     const header = document.querySelector('header');
     if (!header) return;
@@ -734,24 +814,29 @@ function setupSyncButton() {
 
     const syncBtn = document.createElement('button');
     syncBtn.id = 'syncButton';
-    syncBtn.innerHTML = '🔄';
-    syncBtn.style.background = 'none';
-    syncBtn.style.border = 'none';
-    syncBtn.style.color = 'var(--accent-warning)';
-    syncBtn.style.fontSize = '20px';
-    syncBtn.style.marginLeft = '10px';
-    syncBtn.style.cursor = 'pointer';
-    syncBtn.title = 'Google Sheets Sync';
+    syncBtn.className = 'sync-button';
+    syncBtn.innerHTML = '🔄 Sync';
+    syncBtn.title = 'Google Sheets Verilerini Güncelle';
     
     syncBtn.addEventListener('click', () => {
-        googleSync.manualSync();
+        syncBtn.innerHTML = '⏳...';
+        syncBtn.disabled = true;
+        
+        googleSync.manualSync().finally(() => {
+            setTimeout(() => {
+                syncBtn.innerHTML = '🔄 Sync';
+                syncBtn.disabled = false;
+            }, 2000);
+        });
     });
     
-    header.appendChild(syncBtn);
+    // Header'ın sağ tarafına ekle (userInfo'dan önce)
+    const userInfo = document.getElementById('userInfo');
+    header.insertBefore(syncBtn, userInfo);
 }
 
-// 🔥 DEĞİŞKENLER - MEVCUT KODLA UYUMLU
-// =====================================
+// 🔥 DEĞİŞKENLER
+// ===============
 
 let exams = [];
 let homeworks = [];
@@ -793,7 +878,7 @@ const streakColors = {
   90: "#06b6d4"   // Camgöbeği - Efsanevi
 };
 
-// DOM
+// DOM ELEMENTLERİ
 const loginModal=document.getElementById('loginModal');
 const loginBtn=document.getElementById('loginBtn');
 const studentName=document.getElementById('studentName');
@@ -844,7 +929,7 @@ const nextLevelXP=document.getElementById('nextLevelXP');
 const monthlyLeaderboard=document.getElementById('monthlyLeaderboard');
 const totalLeaderboard=document.getElementById('totalLeaderboard');
 
-// Yükleme - SYNC ENTEGRE EDİLMİŞ HALİ
+// Yükleme - SYNC ENTEGRE
 window.addEventListener('load', async ()=>{
   // Önce sync sistemini başlat
   await googleSync.autoSync();
@@ -888,11 +973,9 @@ function checkMonthlyReset() {
   const currentMonth = today.getMonth();
   const currentYear = today.getFullYear();
   
-  // Son sıfırlama tarihini kontrol et
   const lastReset = localStorage.getItem('lastMonthlyReset');
   
   if (!lastReset) {
-    // İlk defa çalışıyor, sıfırla
     resetMonthlyStats();
     localStorage.setItem('lastMonthlyReset', `${currentYear}-${currentMonth}`);
     return;
@@ -900,7 +983,6 @@ function checkMonthlyReset() {
   
   const [lastYear, lastMonth] = lastReset.split('-').map(Number);
   
-  // Ay değişmişse sıfırla
   if (currentYear > lastYear || (currentYear === lastYear && currentMonth > lastMonth)) {
     resetMonthlyStats();
     localStorage.setItem('lastMonthlyReset', `${currentYear}-${currentMonth}`);
@@ -942,7 +1024,6 @@ function updateStreak() {
   const today = new Date().toDateString();
   const lastStudy = stats.lastStudyDate ? new Date(stats.lastStudyDate).toDateString() : null;
   
-  // Bugün çalışılmış mı? (Pomodoro'dan gelen veri)
   const todayStudy = (stats.dailyStudyTime || 0) > 0;
   
   if (todayStudy) {
@@ -951,14 +1032,11 @@ function updateStreak() {
     const yesterdayStr = yesterday.toDateString();
     
     if (lastStudy === yesterdayStr) {
-      // Üst üste çalışma
       stats.currentStreak = (stats.currentStreak || 0) + 1;
     } else if (lastStudy !== today) {
-      // Yeni streak başladı
       stats.currentStreak = 1;
     }
     
-    // En uzun streak'i güncelle
     if (stats.currentStreak > (stats.longestStreak || 0)) {
       stats.longestStreak = stats.currentStreak;
     }
@@ -986,23 +1064,16 @@ loginBtn.addEventListener('click',()=>{
   const userKey = `${name}_${surname}`;
   if(!userStats[userKey]) {
     userStats[userKey] = {
-      // Aylık istatistikler (sıfırlanır)
       monthlyXP: 0,
       monthlyStudyTime: 0,
       monthlySessions: 0,
-      
-      // Toplam istatistikler (kalıcı)
       totalXP: 0,
       totalStudyTime: 0,
       totalSessions: 0,
       level: 1,
-      
-      // Streak Sistemi
       currentStreak: 0,
       longestStreak: 0,
       lastStudyDate: null,
-      
-      // Diğer bilgiler
       joinDate: new Date().toLocaleString('tr-TR'),
       lastActive: new Date().toLocaleString('tr-TR')
     };
@@ -1062,7 +1133,6 @@ contentTypeSelect.addEventListener('change', function() {
   const importanceSelect = document.getElementById('contentImportance');
   
   if (type === 'exam') {
-    // Sınav için önem seviyesi zorunlu
     importanceSelect.innerHTML = `
       <option value="1">⭐ Düşük Önem</option>
       <option value="2">⭐⭐ Orta Önem</option>
@@ -1071,7 +1141,6 @@ contentTypeSelect.addEventListener('change', function() {
       <option value="5">⭐⭐⭐⭐⭐ KRİTİK</option>
     `;
   } else {
-    // Ödev ve hadis için opsiyonel
     importanceSelect.innerHTML = `
       <option value="1">⭐ Düşük Önem</option>
       <option value="2">⭐⭐ Orta Önem</option>
@@ -1100,7 +1169,6 @@ saveContentBtn.addEventListener('click',()=>{
   
   if(!title){alert('Başlık girin!'); return;}
   
-  // Sınav için önem seviyesi kontrolü
   if(type === "exam" && importance === 0) {
     alert('Sınavlar için önem seviyesi seçmelisiniz!');
     return;
@@ -1117,7 +1185,7 @@ saveContentBtn.addEventListener('click',()=>{
   renderUpcoming();
 });
 
-// YENİ FONKSİYONLAR
+// YARDIMCI FONKSİYONLAR
 function escapeHtml(text){return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 
 // SINAV SIRALAMA FONKSİYONU
@@ -1126,7 +1194,6 @@ function sortExams(examsToSort, sortType) {
   
   switch(sortType) {
     case "importance-date":
-      // Önce önem seviyesi (yüksekten düşüğe), sonra tarih (yakından uzağa)
       return sorted.sort((a, b) => {
         const importanceDiff = (b.importance || 3) - (a.importance || 3);
         if (importanceDiff !== 0) return importanceDiff;
@@ -1137,7 +1204,6 @@ function sortExams(examsToSort, sortType) {
       });
       
     case "date":
-      // Sadece tarihe göre (yakından uzağa)
       return sorted.sort((a, b) => {
         const dateA = a.date ? new Date(a.date) : new Date(0);
         const dateB = b.date ? new Date(b.date) : new Date(0);
@@ -1145,7 +1211,6 @@ function sortExams(examsToSort, sortType) {
       });
       
     case "importance":
-      // Sadece önem seviyesine göre (yüksekten düşüğe)
       return sorted.sort((a, b) => {
         return (b.importance || 3) - (a.importance || 3);
       });
@@ -1160,7 +1225,6 @@ function renderExams(){
   
   if(exams.length===0){list.innerHTML='<div class="card"><p>Henüz sınav eklenmedi.</p></div>'; return;}
   
-  // Sınavları sırala
   const sortedExams = sortExams(exams, examSortType);
   
   list.innerHTML=sortedExams.map(exam=>{
@@ -1181,7 +1245,6 @@ function renderHomeworks(){
   
   if(homeworks.length===0){list.innerHTML='<div class="card"><p>Henüz ödev eklenmedi.</p></div>'; return;}
   
-  // Ödevleri tarihe göre sırala (yakından uzağa)
   const sortedHomeworks = [...homeworks].sort((a, b) => {
     const dateA = a.date ? new Date(a.date) : new Date(0);
     const dateB = b.date ? new Date(b.date) : new Date(0);
@@ -1293,22 +1356,17 @@ function deleteItem(type,id){
 if(examSorting) {
   examSorting.addEventListener('click', (e) => {
     if(e.target.classList.contains('sort-option')) {
-      // Tüm seçenekleri pasif yap
       document.querySelectorAll('.sort-option').forEach(opt => {
         opt.classList.remove('active');
       });
       
-      // Tıklananı aktif yap
       e.target.classList.add('active');
-      
-      // Sıralama tipini güncelle
       examSortType = e.target.dataset.sort;
-      
-      // Sınavları yeniden render et
       renderExams();
     }
   });
 }
+
 // ---------------- Sayaç Fonksiyonu ----------------
 function startCountdown() {
   const targetDate = new Date("2025-11-07T15:40:00");
@@ -1346,7 +1404,7 @@ function startCountdown() {
   const interval = setInterval(updateCountdown, 1000);
 }
 
-// Sınav Konuları Fonksiyonları
+// Sınav Konuları Fonksiyonları - 10 LİMİTLİ
 closeTopicModal.addEventListener('click',()=>{
   addTopicModal.style.display='none';
   resetTopicInputs();
@@ -1370,7 +1428,7 @@ function resetTopicInputs() {
   `;
 }
 
-// Konu input'u ekle
+// Konu input'u ekle - 10 LİMİTLİ
 addTopicInputBtn.addEventListener('click', () => {
   const currentInputs = topicsInputs.querySelectorAll('.topic-input-group');
   if (currentInputs.length >= 10) {
@@ -1414,7 +1472,6 @@ saveTopicBtn.addEventListener('click', ()=>{
   
   if(topics.length === 0){alert('Lütfen en az bir konu girin!'); return;}
   
-  // Mevcut konuları kontrol et ve ekle
   const exam = exams.find(e => e.id == examId);
   if(exam) {
     topics.forEach(topic => {
@@ -1450,7 +1507,6 @@ function renderExamTopics(){
 
   let html = '';
   
-  // Sınavlara göre grupla
   const examsWithTopics = {};
   examTopics.forEach(topic => {
     if(!examsWithTopics[topic.examId]) {
@@ -1462,7 +1518,6 @@ function renderExamTopics(){
     examsWithTopics[topic.examId].topics.push(topic);
   });
 
-  // Sınavları tarihe göre sırala
   Object.values(examsWithTopics)
     .sort((a, b) => new Date(a.exam.date) - new Date(b.exam.date))
     .forEach(({exam, topics}) => {
@@ -1494,11 +1549,9 @@ function toggleTopics(header) {
   const topics = header.nextElementSibling;
   const isActive = topics.classList.contains('active');
   
-  // Tüm konuları kapat
   document.querySelectorAll('.exam-topics').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.exam-header').forEach(h => h.classList.remove('active'));
   
-  // Tıklananı aç
   if(!isActive) {
     topics.classList.add('active');
     header.classList.add('active');
@@ -1517,7 +1570,6 @@ addExamTopicBtn.addEventListener('click', ()=>{
 });
 
 // POMODORO SİSTEMİ - GERÇEK ZAMANLI XP
-// Zaman seçenekleri
 timeOptions.forEach(option => {
   option.addEventListener('click', () => {
     timeOptions.forEach(opt => opt.classList.remove('active'));
@@ -1541,17 +1593,16 @@ function startTimer() {
   isRunning = true;
   startPomodoro.disabled = true;
   pausePomodoro.disabled = false;
-  startTime = Date.now(); // Başlangıç zamanını kaydet
-  earnedXP = 0; // Her başlangıçta XP'yi sıfırla
+  startTime = Date.now();
+  earnedXP = 0;
   
   pomodoroInterval = setInterval(() => {
     currentTime--;
     updateTimerDisplay();
     
-    // GERÇEK ZAMANLI XP HESAPLAMA
     if (startTime) {
       const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
-      earnedXP = elapsedSeconds / 60; // Her saniye 1/60 XP (1 dakika = 1 XP)
+      earnedXP = elapsedSeconds / 60;
     }
     
     if (currentTime <= 0) {
@@ -1570,8 +1621,7 @@ function pauseTimer() {
 }
 
 function resetTimer() {
-  // Reset butonuna basınca kazanılan XP'yi kaydet
-  if (earnedXP > 0.0167) { // En az 1 saniye çalışmışsa (0.0167 XP)
+  if (earnedXP > 0.0167) {
     saveEarnedXP();
   }
   
@@ -1580,7 +1630,7 @@ function resetTimer() {
   updateTimerDisplay();
   startPomodoro.disabled = false;
   pausePomodoro.disabled = true;
-  earnedXP = 0; // Resetleyince sıfırla
+  earnedXP = 0;
 }
 
 function saveEarnedXP() {
@@ -1604,24 +1654,19 @@ function saveEarnedXP() {
     };
   }
   
-  // Kazanılan XP'yi yuvarla ve kaydet
-  const roundedXP = Math.floor(earnedXP * 100) / 100; // 2 decimal
-  const roundedMinutes = Math.floor(earnedXP * 100) / 100; // Dakika olarak
+  const roundedXP = Math.floor(earnedXP * 100) / 100;
+  const roundedMinutes = Math.floor(earnedXP * 100) / 100;
   
-  // Aylık istatistiklere ekle
   userStats[userKey].monthlyStudyTime = (userStats[userKey].monthlyStudyTime || 0) + roundedMinutes;
   userStats[userKey].monthlySessions = (userStats[userKey].monthlySessions || 0) + 1;
   userStats[userKey].monthlyXP = (userStats[userKey].monthlyXP || 0) + roundedXP;
   
-  // Toplam istatistiklere ekle
   userStats[userKey].totalStudyTime = (userStats[userKey].totalStudyTime || 0) + roundedMinutes;
   userStats[userKey].totalSessions = (userStats[userKey].totalSessions || 0) + 1;
   userStats[userKey].totalXP = (userStats[userKey].totalXP || 0) + roundedXP;
   
-  // Streak güncelle
   updateStreak();
   
-  // Seviye kontrolü (250 XP'de 1 seviye)
   const newLevel = Math.floor((userStats[userKey].totalXP || 0) / 250) + 1;
   if (newLevel > (userStats[userKey].level || 1)) {
     userStats[userKey].level = newLevel;
@@ -1632,8 +1677,7 @@ function saveEarnedXP() {
   renderClass();
   renderLeaderboards();
   
-  // Resetleme bildirimi
-  if (roundedXP >= 0.5) { // En az 30 saniye çalışmışsa
+  if (roundedXP >= 0.5) {
     alert(`⏱️ ${roundedMinutes.toFixed(1)} dakika kaydedildi!\n+${roundedXP.toFixed(1)} XP kazandın!`);
   }
 }
@@ -1661,7 +1705,6 @@ function completeSession() {
     };
   }
   
-  // Tam oturum XP'si (seçilen süre kadar)
   userStats[userKey].monthlyStudyTime = (userStats[userKey].monthlyStudyTime || 0) + selectedTime;
   userStats[userKey].monthlySessions = (userStats[userKey].monthlySessions || 0) + 1;
   userStats[userKey].monthlyXP = (userStats[userKey].monthlyXP || 0) + selectedTime;
@@ -1670,10 +1713,8 @@ function completeSession() {
   userStats[userKey].totalSessions = (userStats[userKey].totalSessions || 0) + 1;
   userStats[userKey].totalXP = (userStats[userKey].totalXP || 0) + selectedTime;
   
-  // Streak güncelle
   updateStreak();
   
-  // Seviye kontrolü (250 XP'de 1 seviye)
   const newLevel = Math.floor((userStats[userKey].totalXP || 0) / 250) + 1;
   if (newLevel > (userStats[userKey].level || 1)) {
     userStats[userKey].level = newLevel;
@@ -1700,7 +1741,6 @@ function updatePomodoroStats() {
   const stats = userStats[userKey];
   
   if (stats) {
-    // Varsayılan değerlerle NaN koruması
     const totalXP = stats.totalXP || 0;
     const totalStudyTime = stats.totalStudyTime || 0;
     const monthlyXP = stats.monthlyXP || 0;
@@ -1712,13 +1752,11 @@ function updatePomodoroStats() {
     currentXP.textContent = Math.floor(totalXP);
     currentStreakEl.textContent = currentStreak;
     
-    // XP bar güncelleme - NaN koruması
     const currentLevelXP = (totalXP % 250) || 0;
     const xpPercentage = Math.min(100, Math.max(0, (currentLevelXP / 250) * 100));
     xpProgress.style.width = `${xpPercentage}%`;
     nextLevelXP.textContent = Math.max(0, 250 - currentLevelXP);
   } else {
-    // Stats yoksa sıfırla
     totalStudyTimeEl.textContent = "0";
     currentLevel.textContent = "1";
     currentXP.textContent = "0";
@@ -1728,16 +1766,16 @@ function updatePomodoroStats() {
   }
 }
 
-// LİDERLİK TABLOLARI
+// ⭐ LİDERLİK TABLOLARI - GÜNCELLENMİŞ
 function renderLeaderboards() {
   renderMonthlyLeaderboard();
   renderTotalLeaderboard();
+  addParticipationNote();
 }
 
 function renderMonthlyLeaderboard() {
   if (!monthlyLeaderboard) return;
   
-  // Kullanıcıları aylık XP'ye göre sırala
   const sortedUsers = Object.entries(userStats)
     .map(([userKey, stats]) => {
       const [name, surname] = userKey.split('_');
@@ -1747,11 +1785,12 @@ function renderMonthlyLeaderboard() {
         monthlyXP: stats.monthlyXP || 0,
         monthlyStudyTime: stats.monthlyStudyTime || 0,
         level: stats.level || 1,
-        currentStreak: stats.currentStreak || 0
+        currentStreak: stats.currentStreak || 0,
+        totalXP: stats.totalXP || 0
       };
     })
     .sort((a, b) => b.monthlyXP - a.monthlyXP)
-    .filter(user => user.monthlyXP > 0); // Sadece XP'si olanları göster
+    .filter(user => user.monthlyXP > 0 || user.totalXP > 0);
   
   if (sortedUsers.length === 0) {
     monthlyLeaderboard.innerHTML = '<p>Henüz aylık liderlik verisi yok.</p>';
@@ -1785,7 +1824,6 @@ function renderMonthlyLeaderboard() {
 function renderTotalLeaderboard() {
   if (!totalLeaderboard) return;
   
-  // Kullanıcıları toplam XP'ye göre sırala
   const sortedUsers = Object.entries(userStats)
     .map(([userKey, stats]) => {
       const [name, surname] = userKey.split('_');
@@ -1799,7 +1837,7 @@ function renderTotalLeaderboard() {
       };
     })
     .sort((a, b) => b.totalXP - a.totalXP)
-    .filter(user => user.totalXP > 0); // Sadece XP'si olanları göster
+    .filter(user => user.totalXP > 0);
   
   if (sortedUsers.length === 0) {
     totalLeaderboard.innerHTML = '<p>Henüz toplam liderlik verisi yok.</p>';
@@ -1831,6 +1869,67 @@ function renderTotalLeaderboard() {
   }).join('');
 }
 
+// ⭐ LİDERLİK KATILIM NOTU
+function addParticipationNote() {
+  const leaderboardSection = document.getElementById('leaderboard');
+  if (!leaderboardSection) return;
+  
+  const oldNote = document.getElementById('participationNote');
+  if (oldNote) oldNote.remove();
+  
+  const participationNote = document.createElement('div');
+  participationNote.id = 'participationNote';
+  participationNote.className = 'card';
+  participationNote.style.background = 'linear-gradient(135deg, #f59e0b, #dc2626)';
+  participationNote.style.color = 'white';
+  participationNote.style.textAlign = 'center';
+  participationNote.style.marginTop = '30px';
+  participationNote.style.border = '2px solid #f59e0b';
+  participationNote.style.boxShadow = '0 4px 15px rgba(245, 158, 11, 0.3)';
+  
+  participationNote.innerHTML = `
+    <div style="margin-bottom: 15px;">
+      <i class="fas fa-trophy" style="font-size: 2rem; margin-bottom: 10px;"></i>
+      <h3 style="margin: 10px 0; color: white;">🏆 Liderlik Sıralamasına Katılın!</h3>
+    </div>
+    
+    <p style="margin-bottom: 15px; font-size: 1.1rem;">
+      <strong>Liderlik tablosunda yer almak istiyor musunuz?</strong>
+    </p>
+    
+    <p style="margin-bottom: 20px;">
+      Mevcut çalışma sürenizin ekran görüntüsünü gönderin:
+    </p>
+    
+    <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 12px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.3);">
+      <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 8px;">
+        <i class="fas fa-envelope" style="font-size: 1.2rem;"></i>
+        <strong style="font-size: 1.2rem;">iajwowowo@gmail.com</strong>
+      </div>
+      <small style="opacity: 0.9;">E-posta adresine gönderin</small>
+    </div>
+    
+    <div style="background: rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; margin: 15px 0;">
+      <p style="margin: 5px 0; font-size: 0.9rem;">
+        <i class="fas fa-check-circle" style="color: #10b981; margin-right: 5px;"></i>
+        Verileriniz doğrulandıktan sonra sıralamaya ekleneceksiniz!
+      </p>
+      <p style="margin: 5px 0; font-size: 0.9rem;">
+        <i class="fas fa-exclamation-triangle" style="color: #f59e0b; margin-right: 5px;"></i>
+        Sadece gerçek çalışma süreleri kabul edilir
+      </p>
+    </div>
+    
+    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.2);">
+      <small style="opacity: 0.8;">
+        📸 Pomodoro timer'ın ve toplam sürenin göründüğü ekran görüntüsü gönderin
+      </small>
+    </div>
+  `;
+  
+  leaderboardSection.appendChild(participationNote);
+}
+
 // Event Listeners
 startPomodoro.addEventListener('click', startTimer);
 pausePomodoro.addEventListener('click', pauseTimer);
@@ -1840,7 +1939,7 @@ resetPomodoro.addEventListener('click', resetTimer);
 updateTimerDisplay();
 
 // Sayfa her açıldığında aylık sıfırlama kontrolü
-setInterval(checkMonthlyReset, 60 * 60 * 1000); // Her saat kontrol et
+setInterval(checkMonthlyReset, 60 * 60 * 1000);
 </script>
 </body>
 </html>
