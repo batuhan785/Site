@@ -63,7 +63,12 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
 .importance-4{background:#ef4444; color:white;}
 .importance-5{background:#dc2626; color:white;}
 .urgent-card{border-left:6px solid var(--accent-danger) !important;background:linear-gradient(135deg, var(--bg-card), rgba(220, 38, 38, 0.1)) !important;}
-@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+/* SIRALAMA SİSTEMİ */
+.sorting-controls {display:flex;gap:10px;margin-bottom:20px;align-items:center;flex-wrap:wrap;}
+.sort-option {background:rgba(255,255,255,0.1);border:1px solid var(--border-color);padding:8px 16px;border-radius:8px;cursor:pointer;transition:all 0.3s ease;font-size:0.9rem;}
+.sort-option.active {background:linear-gradient(135deg,var(--accent-warning),var(--accent-danger));border-color:var(--accent-warning);}
+.sort-option:hover {background:rgba(245,158,11,0.2);}
 
 /* Sınav Konuları Özel Stilleri */
 .exam-topics-header {display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
@@ -309,6 +314,8 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
   color: white;
   margin-left: 8px;
 }
+
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 </style>
 </head>
 <body>
@@ -370,6 +377,11 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
 
   <div id="exams" class="content">
     <h2 class="countdown-title">Sınavlar</h2>
+    <div class="sorting-controls" id="examSorting">
+      <div class="sort-option active" data-sort="importance-date">Öneme Göre (Yüksek→Düşük)</div>
+      <div class="sort-option" data-sort="date">Tarihe Göre (Yakın→Uzak)</div>
+      <div class="sort-option" data-sort="importance">Sadece Önem Seviyesi</div>
+    </div>
     <div id="examList"></div>
   </div>
 
@@ -499,16 +511,20 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
     <input type="text" id="contentTitle" placeholder="Başlık">
     <textarea id="contentDesc" placeholder="Açıklama"></textarea>
     <input type="datetime-local" id="contentDate">
-    <select id="contentImportance">
-      <option value="1">⭐ Düşük Önem</option>
-      <option value="2">⭐⭐ Orta Önem</option>
-      <option value="3" selected>⭐⭐⭐ Yüksek Önem</option>
-      <option value="4">⭐⭐⭐⭐ Çok Yüksek</option>
-      <option value="5">⭐⭐⭐⭐⭐ KRİTİK</option>
-    </select>
+    <div id="importanceContainer">
+      <select id="contentImportance">
+        <option value="1">⭐ Düşük Önem</option>
+        <option value="2">⭐⭐ Orta Önem</option>
+        <option value="3" selected>⭐⭐⭐ Yüksek Önem</option>
+        <option value="4">⭐⭐⭐⭐ Çok Yüksek</option>
+        <option value="5">⭐⭐⭐⭐⭐ KRİTİK</option>
+        <option value="0">Bu alan için kullanılmıyor</option>
+      </select>
+    </div>
     <button id="saveContentBtn">Kaydet</button>
   </div>
 </div>
+
 <!-- Sınav Konuları Ekleme Modalı -->
 <div id="addTopicModal" class="modal">
   <div class="modal-content">
@@ -544,7 +560,8 @@ const importanceLevels = {
   2:{label:"Orta", icon:"⭐⭐", class:"importance-2"},
   3:{label:"Yüksek", icon:"⭐⭐⭐", class:"importance-3"},
   4:{label:"Çok Yüksek", icon:"⭐⭐⭐⭐", class:"importance-4"},
-  5:{label:"KRİTİK", icon:"⭐⭐⭐⭐⭐", class:"importance-5"}
+  5:{label:"KRİTİK", icon:"⭐⭐⭐⭐⭐", class:"importance-5"},
+  0:{label:"Kullanılmıyor", icon:"", class:"importance-1"}
 };
 
 // STREAK RENK SİSTEMİ
@@ -561,6 +578,9 @@ const streakColors = {
 // Veriler
 let students=[], currentUser=null, isAdmin=false, nextId=100;
 let exams=[], homeworks=[], hadises=[], examTopics=[];
+
+// Sıralama durumu
+let examSortType = "importance-date";
 
 // Pomodoro ve Seviye Sistemi Verileri
 let userStats = {};
@@ -589,6 +609,8 @@ const addModal=document.getElementById('addModal');
 const closeAddModal=document.getElementById('closeAddModal');
 const saveContentBtn=document.getElementById('saveContentBtn');
 const adminSwitch=document.getElementById('adminSwitch');
+const contentTypeSelect=document.getElementById('contentType');
+const importanceContainer=document.getElementById('importanceContainer');
 
 // Sınav konuları DOM
 const examTopicsList=document.getElementById('examTopicsList');
@@ -599,6 +621,9 @@ const topicExamSelect=document.getElementById('topicExamSelect');
 const addExamTopicBtn=document.getElementById('addExamTopicBtn');
 const addTopicInputBtn=document.getElementById('addTopicInputBtn');
 const topicsInputs=document.getElementById('topicsInputs');
+
+// Sıralama DOM
+const examSorting=document.getElementById('examSorting');
 
 // Pomodoro DOM
 const pomodoroTimer=document.getElementById('pomodoroTimer');
@@ -822,6 +847,31 @@ adminSwitch.addEventListener('click',()=>{
   else alert("Şifre yanlış!");
 });
 
+// İçerik tipi değiştiğinde önem seviyesi ayarı
+contentTypeSelect.addEventListener('change', function() {
+  const type = this.value;
+  const importanceSelect = document.getElementById('contentImportance');
+  
+  if (type === 'exam') {
+    // Sınav için önem seviyesi zorunlu
+    importanceSelect.innerHTML = `
+      <option value="1">⭐ Düşük Önem</option>
+      <option value="2">⭐⭐ Orta Önem</option>
+      <option value="3" selected>⭐⭐⭐ Yüksek Önem</option>
+      <option value="4">⭐⭐⭐⭐ Çok Yüksek</option>
+      <option value="5">⭐⭐⭐⭐⭐ KRİTİK</option>
+    `;
+  } else {
+    // Ödev ve hadis için opsiyonel
+    importanceSelect.innerHTML = `
+      <option value="1">⭐ Düşük Önem</option>
+      <option value="2">⭐⭐ Orta Önem</option>
+      <option value="3">⭐⭐⭐ Yüksek Önem</option>
+      <option value="0" selected>Bu alan için kullanılmıyor</option>
+    `;
+  }
+});
+
 // EKLE
 addBtn.addEventListener('click',()=>{
   if(!currentUser){alert('Lütfen önce giriş yapın!'); loginModal.style.display='flex';return;}
@@ -838,23 +888,73 @@ saveContentBtn.addEventListener('click',()=>{
   const desc=document.getElementById('contentDesc').value.trim();
   const date=document.getElementById('contentDate').value;
   const importance=parseInt(document.getElementById('contentImportance').value);
+  
   if(!title){alert('Başlık girin!'); return;}
-  if(type==="exam"){exams.push({id:nextId++,title,desc,date,importance}); renderExams();}
-  else if(type==="homework"){homeworks.push({id:nextId++,title,desc,date,importance}); renderHomeworks();}
-  else if(type==="hadis"){hadises.push({id:nextId++,title,desc,date,importance}); renderHadis();}
+  
+  // Sınav için önem seviyesi kontrolü
+  if(type === "exam" && importance === 0) {
+    alert('Sınavlar için önem seviyesi seçmelisiniz!');
+    return;
+  }
+  
+  if(type==="exam"){exams.push({id:nextId++,title,desc,date,importance: importance === 0 ? 3 : importance}); renderExams();}
+  else if(type==="homework"){homeworks.push({id:nextId++,title,desc,date,importance: importance === 0 ? null : importance}); renderHomeworks();}
+  else if(type==="hadis"){hadises.push({id:nextId++,title,desc,date,importance: importance === 0 ? null : importance}); renderHadis();}
+  
   document.getElementById('contentTitle').value='';
   document.getElementById('contentDesc').value='';
   document.getElementById('contentDate').value='';
   addModal.style.display='none';
+  renderUpcoming();
 });
 
 // YENİ FONKSİYONLAR
 function escapeHtml(text){return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 
+// SINAV SIRALAMA FONKSİYONU
+function sortExams(examsToSort, sortType) {
+  const sorted = [...examsToSort];
+  
+  switch(sortType) {
+    case "importance-date":
+      // Önce önem seviyesi (yüksekten düşüğe), sonra tarih (yakından uzağa)
+      return sorted.sort((a, b) => {
+        const importanceDiff = (b.importance || 3) - (a.importance || 3);
+        if (importanceDiff !== 0) return importanceDiff;
+        
+        const dateA = a.date ? new Date(a.date) : new Date(0);
+        const dateB = b.date ? new Date(b.date) : new Date(0);
+        return dateA - dateB;
+      });
+      
+    case "date":
+      // Sadece tarihe göre (yakından uzağa)
+      return sorted.sort((a, b) => {
+        const dateA = a.date ? new Date(a.date) : new Date(0);
+        const dateB = b.date ? new Date(b.date) : new Date(0);
+        return dateA - dateB;
+      });
+      
+    case "importance":
+      // Sadece önem seviyesine göre (yüksekten düşüğe)
+      return sorted.sort((a, b) => {
+        return (b.importance || 3) - (a.importance || 3);
+      });
+      
+    default:
+      return sorted;
+  }
+}
+
 function renderExams(){
   const list=document.getElementById('examList'); if(!list) return;
+  
   if(exams.length===0){list.innerHTML='<div class="card"><p>Henüz sınav eklenmedi.</p></div>'; return;}
-  list.innerHTML=exams.map(exam=>{
+  
+  // Sınavları sırala
+  const sortedExams = sortExams(exams, examSortType);
+  
+  list.innerHTML=sortedExams.map(exam=>{
     const imp=importanceLevels[exam.importance||3];
     const urgent=isItemUrgent(exam.date);
     return `<div class="card ${urgent?'urgent-card':''}">
@@ -869,13 +969,22 @@ function renderExams(){
 
 function renderHomeworks(){
   const list=document.getElementById('homeworkList'); if(!list) return;
+  
   if(homeworks.length===0){list.innerHTML='<div class="card"><p>Henüz ödev eklenmedi.</p></div>'; return;}
-  list.innerHTML=homeworks.map(hw=>{
-    const imp=importanceLevels[hw.importance||2];
+  
+  // Ödevleri tarihe göre sırala (yakından uzağa)
+  const sortedHomeworks = [...homeworks].sort((a, b) => {
+    const dateA = a.date ? new Date(a.date) : new Date(0);
+    const dateB = b.date ? new Date(b.date) : new Date(0);
+    return dateA - dateB;
+  });
+  
+  list.innerHTML=sortedHomeworks.map(hw=>{
+    const imp = hw.importance ? importanceLevels[hw.importance] : null;
     const urgent=isItemUrgent(hw.date);
     return `<div class="card ${urgent?'urgent-card':''}">
       ${isAdmin?`<button class="delete-btn" onclick="deleteItem('homework',${hw.id})"><i class="fas fa-times"></i></button>`:''}
-      <h3>${escapeHtml(hw.title)} <span class="importance-badge ${imp.class}">${imp.icon} ${imp.label}</span>${urgent?'<span style="color:var(--accent-danger);margin-left:8px;">🚨 SON GÜN!</span>':''}</h3>
+      <h3>${escapeHtml(hw.title)} ${imp ? `<span class="importance-badge ${imp.class}">${imp.icon} ${imp.label}</span>` : ''}${urgent?'<span style="color:var(--accent-danger);margin-left:8px;">🚨 SON GÜN!</span>':''}</h3>
       <p>${escapeHtml(hw.desc)}</p>
       <p><strong>Teslim Tarihi:</strong> ${hw.date?new Date(hw.date).toLocaleString('tr-TR'):'-'}</p>
     </div>`;
@@ -887,10 +996,10 @@ function renderHadis(){
   const list=document.getElementById('hadisList'); if(!list) return;
   if(hadises.length===0){list.innerHTML='<div class="card"><p>Henüz hadis eklenmedi.</p></div>'; return;}
   list.innerHTML=hadises.map(hd=>{
-    const imp=importanceLevels[hd.importance||3];
+    const imp = hd.importance ? importanceLevels[hd.importance] : null;
     return `<div class="card">
       ${isAdmin?`<button class="delete-btn" onclick="deleteItem('hadis',${hd.id})"><i class="fas fa-times"></i></button>`:''}
-      <h3>${escapeHtml(hd.title)} <span class="importance-badge ${imp.class}">${imp.icon} ${imp.label}</span></h3>
+      <h3>${escapeHtml(hd.title)} ${imp ? `<span class="importance-badge ${imp.class}">${imp.icon} ${imp.label}</span>` : ''}</h3>
       <p>${escapeHtml(hd.desc)}</p>
     </div>`;
   }).join('');
@@ -939,7 +1048,7 @@ function renderClass(){
             🔥 ${streak}
           </div>
           <small style="color:#94a3b8;">
-            ${Math.floor(totalXP)} XP • ${longestStreak} En Uzun
+       ${Math.floor(totalXP)} XP • ${longestStreak} En Uzun
           </small>
         </div>
       </div>
@@ -953,7 +1062,10 @@ function renderUpcoming(){
   exams.forEach(e=>{if(e.date){const diff=(new Date(e.date)-now)/(1000*60*60*24); if(diff>=0&&diff<=2) upcoming.push({type:"Sınav",title:e.title,date:e.date,importance:e.importance});}});
   homeworks.forEach(h=>{if(h.date){const diff=(new Date(h.date)-now)/(1000*60*60*24); if(diff>=0&&diff<=2) upcoming.push({type:"Ödev",title:h.title,date:h.date,importance:h.importance});}});
   if(upcoming.length===0){list.innerHTML='<li>Yaklaşan sınav veya ödev bulunmamaktadır.</li>'; return;}
-  list.innerHTML=upcoming.map(item=>{const imp=importanceLevels[item.importance||3]; return `<li><strong>${item.type}:</strong> ${escapeHtml(item.title)} <span class="importance-badge ${imp.class}">${imp.icon}</span> <small>(${new Date(item.date).toLocaleString('tr-TR')})</small></li>`;}).join('');
+  list.innerHTML=upcoming.map(item=>{
+    const imp = item.importance ? importanceLevels[item.importance] : null;
+    return `<li><strong>${item.type}:</strong> ${escapeHtml(item.title)} ${imp ? `<span class="importance-badge ${imp.class}">${imp.icon}</span>` : ''} <small>(${new Date(item.date).toLocaleString('tr-TR')})</small></li>`;
+  }).join('');
 }
 
 function isItemUrgent(date){if(!date) return false; const now=new Date(); const diff=(new Date(date)-now)/(1000*60*60*24); return diff>=0&&diff<=1;}
@@ -966,6 +1078,27 @@ function deleteItem(type,id){
   localStorage.setItem('exams',JSON.stringify(exams));
   localStorage.setItem('homeworks',JSON.stringify(homeworks));
   localStorage.setItem('hadises',JSON.stringify(hadises));
+}
+
+// Sınav sıralama event listener'ları
+if(examSorting) {
+  examSorting.addEventListener('click', (e) => {
+    if(e.target.classList.contains('sort-option')) {
+      // Tüm seçenekleri pasif yap
+      document.querySelectorAll('.sort-option').forEach(opt => {
+        opt.classList.remove('active');
+      });
+      
+      // Tıklananı aktif yap
+      e.target.classList.add('active');
+      
+      // Sıralama tipini güncelle
+      examSortType = e.target.dataset.sort;
+      
+      // Sınavları yeniden render et
+      renderExams();
+    }
+  });
 }
 // ---------------- Sayaç Fonksiyonu ----------------
 function startCountdown() {
