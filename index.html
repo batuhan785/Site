@@ -552,9 +552,16 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
     <button id="saveTopicBtn">Kaydet</button>
   </div>
 </div>
-  <button class="login-btn" id="loginBtn" onclick="handleLogin()">Giriş Yap</button>
 
 <script>
+  const firebaseConfig = {
+  apiKey: "AIzaSyCQdXsTb6BwH6grbDndGIikibjk-PtkfuI",
+  authDomain: "ogrenciportali-3556c.firebaseapp.com",
+  projectId: "ogrenciportali-3556c",
+  storageBucket: "ogrenciportali-3556c.firebasestorage.app",
+  messagingSenderId: "796688422959",
+  appId: "1:796688422959:web:58ba81eb06b6a704ba0eda"
+};
 // Önem seviyeleri
 const importanceLevels = {
     1:{label:"Düşük", icon:"⭐", class:"importance-1"},
