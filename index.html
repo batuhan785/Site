@@ -555,26 +555,6 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
   <button class="login-btn" id="loginBtn" onclick="handleLogin()">Giriş Yap</button>
 
 <script>
-  // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyCQdXsTb6BwH6grbDndGIikibjk-PtkfuI",
-  authDomain: "ogrenciportali-3556c.firebaseapp.com",
-  projectId: "ogrenciportali-3556c",
-  storageBucket: "ogrenciportali-3556c.firebasestorage.app",
-  messagingSenderId: "796688422959",
-  appId: "1:796688422959:web:58ba81eb06b6a704ba0eda"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-  // Firebase Firestore'u import et ve başlat
-import { getFirestore } from "firebase/firestore";
-const db = getFirestore(app);
 // Önem seviyeleri
 const importanceLevels = {
     1:{label:"Düşük", icon:"⭐", class:"importance-1"},
