@@ -554,6 +554,12 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
 </div>
 
 <script>
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyC7r7pdPPaWmUDoiqLmxfUROnvjrYaqcgk",
   authDomain: "ogrenciportali-3f15d.firebaseapp.com",
@@ -564,10 +570,8 @@ const firebaseConfig = {
   appId: "1:468574692779:web:d4f4ca45d2387a80929eee"
 };
 
-// Firebase'i başlat
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 // Önem seviyeleri
 const importanceLevels = {
   1:{label:"Düşük", icon:"⭐", class:"importance-1"},
