@@ -55,6 +55,80 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
 .close{color:var(--accent-warning);float:right;font-size:28px;font-weight:bold;cursor:pointer;}
 #upcomingList li{margin:10px 0;padding:12px;background:rgba(255,255,255,0.06);border-radius:8px;list-style:none;}
 
+/* Tatil değiştirici için yeni stiller */
+.change-countdown-btn {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.holiday-selector-modal .modal-content {
+  max-width: 400px;
+}
+
+.holiday-option {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.holiday-option:hover {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: var(--accent-warning);
+}
+
+.holiday-option.active {
+  background: linear-gradient(135deg, var(--accent-warning), var(--accent-danger));
+  border-color: var(--accent-warning);
+}
+
+.holiday-dates {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin-top: 5px;
+}
+
+/* SYNC BUTONU STİLLERİ */
+.sync-button {
+  background: linear-gradient(135deg, var(--accent-warning), var(--accent-danger));
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+  transition: all 0.3s ease;
+  margin-left: 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.sync-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+
+.sync-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* ÖNEM PUANI STİLLERİ */
 .importance-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;font-size:0.8rem;margin-left:8px;}
 .importance-1{background:#6b7280; color:white;}
@@ -70,12 +144,9 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
 .sort-option.active {background:linear-gradient(135deg,var(--accent-warning),var(--accent-danger));border-color:var(--accent-warning);}
 .sort-option:hover {background:rgba(245,158,11,0.2);}
 
-/* Sınav Konuları Özel Stilleri */
-.exam-topics-header {display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
-.exam-topics-header h2 {margin:0;}
-.add-topic-btn {background:linear-gradient(135deg,#16a34a,#059669);color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;gap:5px;}
-.exam-card {background:var(--bg-card);border-radius:12px;margin-bottom:15px;border:1px solid var(--border-color);overflow:hidden;}
-.exam-header {background:linear-gradient(135deg,var(--accent-warning),var(--accent-danger));padding:15px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+/* Sınav Konuları Özel Stilleri - GÜNCELLENDİ */
+.exam-card {background:var(--bg-card);border-radius:12px;margin-bottom:15px;border:1px solid var(--border-color);overflow:hidden;cursor:pointer;}
+.exam-header {background:linear-gradient(135deg,var(--accent-warning),var(--accent-danger));padding:15px 20px;display:flex;justify-content:space-between;align-items:center;}
 .exam-header h3 {margin:0;font-size:1.2rem;}
 .exam-header .toggle-icon {transition:transform 0.3s ease;}
 .exam-header.active .toggle-icon {transform:rotate(180deg);}
@@ -315,32 +386,6 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
   margin-left: 8px;
 }
 
-/* SYNC BUTONU STİLLERİ */
-.sync-button {
-  background: linear-gradient(135deg, var(--accent-warning), var(--accent-danger));
-  border: none;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 14px;
-  cursor: pointer;
-  font-weight: 600;
-  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
-  transition: all 0.3s ease;
-  margin-left: 15px;
-}
-
-.sync-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
-}
-
-.sync-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 </style>
 </head>
@@ -357,12 +402,41 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
   </div>
 </div>
 
+<!-- Tatil Seçici Modalı -->
+<div id="holidaySelectorModal" class="modal holiday-selector-modal">
+  <div class="modal-content">
+    <span class="close" id="closeHolidayModal">&times;</span>
+    <h2>Tatil Seçin</h2>
+    <div id="holidayOptions">
+      <div class="holiday-option active" data-target="2025-11-07T15:40:00">
+        <strong>1. Dönem Ara Tatil</strong>
+        <div class="holiday-dates">7-14 Kasım 2025</div>
+      </div>
+      <div class="holiday-option" data-target="2026-01-21T10:00:00">
+        <strong>15 Tatil</strong>
+        <div class="holiday-dates">21 Ocak - 5 Şubat 2026</div>
+      </div>
+      <div class="holiday-option" data-target="2026-03-13T15:40:00">
+        <strong>2. Dönem Ara Tatil</strong>
+        <div class="holiday-dates">13-20 Mart 2026</div>
+      </div>
+      <div class="holiday-option" data-target="2026-06-26T10:00:00">
+        <strong>Yaz Tatili</strong>
+        <div class="holiday-dates">26 Haziran - 8 Eylül 2026</div>
+      </div>
+    </div>
+    <button id="selectHolidayBtn">Seç</button>
+  </div>
+</div>
+
 <div class="overlay" id="overlay"></div>
 
 <header>
   <div class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></div>
   <div class="header-title">Öğrenci Portalı</div>
-  <div class="user-info" id="userInfo" style="display:none;">Hoş geldiniz<br><small id="userName"></small></div>
+  <div class="user-info" id="userInfo" style="display:none;">
+    Hoş geldiniz<br><small id="userName"></small>
+  </div>
 </header>
 
 <div class="sidebar" id="sidebar">
@@ -371,7 +445,6 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
   <a href="#" data-section="homeworks"><i class="fas fa-tasks"></i> Ödevler</a>
   <a href="#" data-section="hadis"><i class="fas fa-book"></i> Hadis-i Şerifler</a>
   <a href="#" data-section="class"><i class="fas fa-users"></i> Sınıf Listesi</a>
-  <a href="#" data-section="examTopics"><i class="fas fa-list-alt"></i> Sınav Konuları</a>
   <a href="#" data-section="pomodoro"><i class="fas fa-clock"></i> Pomodoro Timer</a>
   <a href="#" data-section="leaderboard"><i class="fas fa-trophy"></i> Liderlik Tablosu</a>
   <a href="#" id="adminSwitch"><i class="fas fa-user-shield"></i> Admin Profiline Geçiş Yap</a>
@@ -380,14 +453,20 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
 <div class="container">
   <div id="home" class="content active">
     <div class="countdown-container">
-      <div class="countdown-title">1. Dönem Ara Tatiline Kalan Süre</div>
+      <div class="countdown-title" id="countdownTitle">
+        1. Dönem Ara Tatiline Kalan Süre
+        <button class="change-countdown-btn" id="changeCountdownBtn">
+          <i class="fas fa-exchange-alt"></i> Değiştir
+        </button>
+      </div>
+      
       <div class="countdown-row">
         <div class="countdown-item"><span id="days" class="value">00</span><label>Gün</label></div>
         <div class="countdown-item"><span id="hours" class="value">00</span><label>Saat</label></div>
         <div class="countdown-item"><span id="minutes" class="value">00</span><label>Dakika</label></div>
         <div class="countdown-item"><span id="seconds" class="value">00</span><label>Saniye</label></div>
       </div>
-      <div class="holiday-info">7-14 Kasım 2025</div>
+      <div class="holiday-info" id="holidayInfo">7-14 Kasım 2025</div>
     </div>
     <div class="card">
       <h3>Hoş Geldiniz!</h3>
@@ -401,6 +480,7 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
     </div>
   </div>
 
+  <!-- Diğer içerik bölümleri -->
   <div id="exams" class="content">
     <h2 class="countdown-title">Sınavlar</h2>
     <div class="sorting-controls" id="examSorting">
@@ -427,18 +507,6 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
     <h2 class="countdown-title">Sınıf Listesi</h2>
     <div class="card">
       <div class="class-list" id="classList"><p>Sınıf listesi yükleniyor...</p></div>
-    </div>
-  </div>
-  
-  <div id="examTopics" class="content">
-    <div class="exam-topics-header">
-      <h2 class="countdown-title">Sınav Konuları</h2>
-      <button id="addExamTopicBtn" class="add-topic-btn" style="display:none;">
-        <i class="fas fa-plus"></i> Konu Ekle
-      </button>
-    </div>
-    <div id="examTopicsList">
-      <div class="card"><p>Henüz sınav konusu eklenmedi.</p></div>
     </div>
   </div>
 
@@ -525,6 +593,7 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
 
 <div class="add-btn" id="addBtn"><i class="fas fa-plus"></i></div>
 
+<!-- Modal pencereleri -->
 <div id="addModal" class="modal">
   <div class="modal-content">
     <span class="close" id="closeAddModal">&times;</span>
@@ -555,7 +624,7 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
 <div id="addTopicModal" class="modal">
   <div class="modal-content">
     <span class="close" id="closeTopicModal">&times;</span>
-    <h2>Yeni Sınav Konusu Ekle</h2>
+    <h2>Yeni Sınav Konuları Ekle</h2>
     <select id="topicExamSelect">
       <option value="">Sınav Seçin</option>
     </select>
@@ -580,6 +649,132 @@ button{background:linear-gradient(135deg,var(--accent-warning),var(--accent-dang
 </div>
 
 <script>
+// Tatil bilgileri
+const holidayInfo = {
+  "2025-11-07T15:40:00": { 
+    title: "1. Dönem Ara Tatiline Kalan Süre", 
+    info: "7-14 Kasım 2025" 
+  },
+  "2026-01-21T10:00:00": { 
+    title: "15 Tatiline Kalan Süre", 
+    info: "21 Ocak - 5 Şubat 2026" 
+  },
+  "2026-03-13T15:40:00": { 
+    title: "2. Dönem Ara Tatiline Kalan Süre", 
+    info: "13-20 Mart 2026" 
+  },
+  "2026-06-26T10:00:00": { 
+    title: "Yaz Tatiline Kalan Süre", 
+    info: "26 Haziran - 8 Eylül 2026" 
+  }
+};
+
+// Tatil seçici için değişken
+let currentTargetDate = "2025-11-07T15:40:00";
+let countdownInterval = null;
+
+// Tatil seçici modal işlevleri
+const holidaySelectorModal = document.getElementById('holidaySelectorModal');
+const changeCountdownBtn = document.getElementById('changeCountdownBtn');
+const closeHolidayModal = document.getElementById('closeHolidayModal');
+const selectHolidayBtn = document.getElementById('selectHolidayBtn');
+const holidayOptions = document.querySelectorAll('.holiday-option');
+
+// Tatil değiştir butonu
+changeCountdownBtn.addEventListener('click', () => {
+  holidaySelectorModal.style.display = 'flex';
+});
+
+// Tatil modal kapatma
+closeHolidayModal.addEventListener('click', () => {
+  holidaySelectorModal.style.display = 'none';
+});
+
+window.addEventListener('click', (e) => {
+  if (e.target === holidaySelectorModal) {
+    holidaySelectorModal.style.display = 'none';
+  }
+});
+
+// Tatil seçeneklerini seçme
+holidayOptions.forEach(option => {
+  option.addEventListener('click', () => {
+    holidayOptions.forEach(opt => opt.classList.remove('active'));
+    option.classList.add('active');
+  });
+});
+
+// Tatil seçme butonu
+selectHolidayBtn.addEventListener('click', () => {
+  const selectedOption = document.querySelector('.holiday-option.active');
+  if (selectedOption) {
+    currentTargetDate = selectedOption.dataset.target;
+    
+    // Sayacı yeniden başlat
+    startCountdown();
+    
+    // Başlık ve bilgiyi güncelle
+    const holiday = holidayInfo[currentTargetDate];
+    document.getElementById('countdownTitle').innerHTML = `
+      ${holiday.title}
+      <button class="change-countdown-btn" id="changeCountdownBtn">
+        <i class="fas fa-exchange-alt"></i> Değiştir
+      </button>
+    `;
+    document.getElementById('holidayInfo').textContent = holiday.info;
+    
+    // Modal'ı kapat
+    holidaySelectorModal.style.display = 'none';
+    
+    // Buton event listener'ını yeniden ekle
+    document.getElementById('changeCountdownBtn').addEventListener('click', () => {
+      holidaySelectorModal.style.display = 'flex';
+    });
+  }
+});
+
+// Sayaç fonksiyonu
+function startCountdown() {
+  const targetDate = new Date(currentTargetDate);
+
+  const daysEl = document.getElementById('days');
+  const hoursEl = document.getElementById('hours');
+  const minutesEl = document.getElementById('minutes');
+  const secondsEl = document.getElementById('seconds');
+
+  // Önceki interval'i temizle
+  if (countdownInterval) {
+    clearInterval(countdownInterval);
+  }
+
+  function updateCountdown() {
+    const now = new Date();
+    const diff = targetDate - now;
+
+    if (diff <= 0) {
+      daysEl.textContent = "00";
+      hoursEl.textContent = "00";
+      minutesEl.textContent = "00";
+      secondsEl.textContent = "00";
+      clearInterval(countdownInterval);
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    daysEl.textContent = days.toString().padStart(2, "0");
+    hoursEl.textContent = hours.toString().padStart(2, "0");
+    minutesEl.textContent = minutes.toString().padStart(2, "0");
+    secondsEl.textContent = seconds.toString().padStart(2, "0");
+  }
+
+  updateCountdown();
+  countdownInterval = setInterval(updateCountdown, 1000);
+}
+
 // 🔥 GOOGLE SHEETS SYNC SİSTEMİ - TAM ENTEGRE
 // ==============================================
 
@@ -631,7 +826,7 @@ class GoogleSheetsSync {
                 if (value) isEmptyRow = false;
             });
 
-            if (!isEmptyRow && rowData.type) {
+            if (!isEmptyRow) {
                 result.push(rowData);
             }
         }
@@ -780,7 +975,6 @@ class GoogleSheetsSync {
         if (window.renderHomeworks) renderHomeworks();
         if (window.renderHadis) renderHadis();
         if (window.renderClass) renderClass();
-        if (window.renderExamTopics) renderExamTopics();
         if (window.renderUpcoming) renderUpcoming();
         if (window.renderLeaderboards) renderLeaderboards();
         if (window.updatePomodoroStats) updatePomodoroStats();
@@ -806,10 +1000,12 @@ class GoogleSheetsSync {
 
 const googleSync = new GoogleSheetsSync();
 
-// Sync butonu ekleme - GÜNCELLENDİ
+// Sync butonu ekleme - HEADER'A EKLENDİ
 function setupSyncButton() {
     const header = document.querySelector('header');
     if (!header) return;
+    
+    // Eğer sync butonu zaten varsa çık
     if (document.getElementById('syncButton')) return;
 
     const syncBtn = document.createElement('button');
@@ -900,12 +1096,10 @@ const contentTypeSelect=document.getElementById('contentType');
 const importanceContainer=document.getElementById('importanceContainer');
 
 // Sınav konuları DOM
-const examTopicsList=document.getElementById('examTopicsList');
 const addTopicModal=document.getElementById('addTopicModal');
 const closeTopicModal=document.getElementById('closeTopicModal');
 const saveTopicBtn=document.getElementById('saveTopicBtn');
 const topicExamSelect=document.getElementById('topicExamSelect');
-const addExamTopicBtn=document.getElementById('addExamTopicBtn');
 const addTopicInputBtn=document.getElementById('addTopicInputBtn');
 const topicsInputs=document.getElementById('topicsInputs');
 
@@ -955,13 +1149,13 @@ window.addEventListener('load', async ()=>{
   if(savedTopics) examTopics=JSON.parse(savedTopics);
   if(savedStats) userStats=JSON.parse(savedStats);
 
-  // Sync butonunu kur
+  // Sync butonunu kur - BU SATIR EKLENDİ
   setupSyncButton();
 
   // Aylık sıfırlama kontrolü
   checkMonthlyReset();
 
-  renderExams(); renderHomeworks(); renderHadis(); renderClass(); renderUpcoming(); renderExamTopics();
+  renderExams(); renderHomeworks(); renderHadis(); renderClass(); renderUpcoming();
   updatePomodoroStats();
   startCountdown();
   renderLeaderboards();
@@ -1107,12 +1301,6 @@ sidebarLinks.forEach(link=>{
     document.getElementById(sectionId).classList.add('active');
     sidebar.classList.remove('active');overlay.classList.remove('active');
     
-    // Sınav konuları bölümüne geçişte admin kontrolü
-    if(sectionId === 'examTopics') {
-      if(isAdmin) addExamTopicBtn.style.display = 'inline-block';
-      else addExamTopicBtn.style.display = 'none';
-    }
-    
     // Liderlik tablosunu güncelle
     if(sectionId === 'leaderboard') {
       renderLeaderboards();
@@ -1230,14 +1418,52 @@ function renderExams(){
   list.innerHTML=sortedExams.map(exam=>{
     const imp=importanceLevels[exam.importance||3];
     const urgent=isItemUrgent(exam.date);
-    return `<div class="card ${urgent?'urgent-card':''}">
-      ${isAdmin?`<button class="delete-btn" onclick="deleteItem('exam',${exam.id})"><i class="fas fa-times"></i></button>`:''}
-      <h3>${escapeHtml(exam.title)} <span class="importance-badge ${imp.class}">${imp.icon} ${imp.label}</span>${urgent?'<span style="color:var(--accent-danger);margin-left:8px;">🚨 SON GÜN!</span>':''}</h3>
-      <p>${escapeHtml(exam.desc)}</p>
-      <p><strong>Tarih:</strong> ${exam.date?new Date(exam.date).toLocaleString('tr-TR'):'-'}</p>
-    </div>`;
+    const examTopicsForThisExam = examTopics.filter(topic => topic.examId === exam.id);
+    const hasTopics = examTopicsForThisExam.length > 0;
+    
+    return `
+      <div class="exam-card" onclick="toggleExamTopics(this)">
+        <div class="exam-header ${hasTopics ? 'has-topics' : ''}">
+          <h3>${escapeHtml(exam.title)} <span class="importance-badge ${imp.class}">${imp.icon} ${imp.label}</span>${urgent?'<span style="color:var(--accent-danger);margin-left:8px;">🚨 SON GÜN!</span>':''}</h3>
+          ${hasTopics ? '<div class="toggle-icon"><i class="fas fa-chevron-down"></i></div>' : ''}
+          ${isAdmin ? `<button class="delete-btn" onclick="event.stopPropagation(); deleteItem('exam',${exam.id})"><i class="fas fa-times"></i></button>` : ''}
+        </div>
+        <p>${escapeHtml(exam.desc)}</p>
+        <p><strong>Tarih:</strong> ${exam.date?new Date(exam.date).toLocaleString('tr-TR'):'-'}</p>
+        
+        ${hasTopics ? `
+          <div class="exam-topics">
+            ${examTopicsForThisExam.map(topic => `
+              <div class="topic-item">
+                <strong>${escapeHtml(topic.title)}</strong>
+                ${topic.desc ? `<p>${escapeHtml(topic.desc)}</p>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+      </div>
+    `;
   }).join('');
   localStorage.setItem('exams',JSON.stringify(exams));
+}
+
+// Sınav konularını aç/kapa
+function toggleExamTopics(card) {
+  const topics = card.querySelector('.exam-topics');
+  const header = card.querySelector('.exam-header');
+  
+  if (!topics) return;
+  
+  const isActive = topics.classList.contains('active');
+  
+  // Tüm sınav konularını kapat
+  document.querySelectorAll('.exam-topics').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.exam-header').forEach(h => h.classList.remove('active'));
+  
+  if (!isActive) {
+    topics.classList.add('active');
+    header.classList.add('active');
+  }
 }
 
 function renderHomeworks(){
@@ -1343,7 +1569,13 @@ function renderUpcoming(){
 function isItemUrgent(date){if(!date) return false; const now=new Date(); const diff=(new Date(date)-now)/(1000*60*60*24); return diff>=0&&diff<=1;}
 
 function deleteItem(type,id){
-  if(type==="exam"){exams=exams.filter(e=>e.id!==id); renderExams();}
+  if(type==="exam"){
+    exams = exams.filter(e=>e.id!==id);
+    // Sınav silinirse konularını da sil
+    examTopics = examTopics.filter(topic => topic.examId !== id);
+    localStorage.setItem('examTopics', JSON.stringify(examTopics));
+    renderExams();
+  }
   else if(type==="homework"){homeworks=homeworks.filter(h=>h.id!==id); renderHomeworks();}
   else if(type==="hadis"){hadises=hadises.filter(h=>h.id!==id); renderHadis();}
   renderUpcoming();
@@ -1365,43 +1597,6 @@ if(examSorting) {
       renderExams();
     }
   });
-}
-
-// ---------------- Sayaç Fonksiyonu ----------------
-function startCountdown() {
-  const targetDate = new Date("2025-11-07T15:40:00");
-
-  const daysEl = document.getElementById('days');
-  const hoursEl = document.getElementById('hours');
-  const minutesEl = document.getElementById('minutes');
-  const secondsEl = document.getElementById('seconds');
-
-  function updateCountdown() {
-    const now = new Date();
-    const diff = targetDate - now;
-
-    if (diff <= 0) {
-      daysEl.textContent = "00";
-      hoursEl.textContent = "00";
-      minutesEl.textContent = "00";
-      secondsEl.textContent = "00";
-      clearInterval(interval);
-      return;
-    }
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((diff / (1000 * 60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
-
-    daysEl.textContent = days.toString().padStart(2, "0");
-    hoursEl.textContent = hours.toString().padStart(2, "0");
-    minutesEl.textContent = minutes.toString().padStart(2, "0");
-    secondsEl.textContent = seconds.toString().padStart(2, "0");
-  }
-
-  updateCountdown();
-  const interval = setInterval(updateCountdown, 1000);
 }
 
 // Sınav Konuları Fonksiyonları - 10 LİMİTLİ
@@ -1488,85 +1683,9 @@ saveTopicBtn.addEventListener('click', ()=>{
     resetTopicInputs();
     topicExamSelect.value = '';
     addTopicModal.style.display = 'none';
-    renderExamTopics();
+    renderExams();
     alert('Konular başarıyla eklendi!');
   }
-});
-
-// Render Fonksiyonu
-function renderExamTopics(){
-  if(exams.length === 0){
-    examTopicsList.innerHTML = '<div class="card"><p>Henüz sınav eklenmedi.</p></div>';
-    return;
-  }
-  
-  if(examTopics.length === 0){
-    examTopicsList.innerHTML = '<div class="card"><p>Henüz sınav konusu eklenmedi.</p></div>';
-    return;
-  }
-
-  let html = '';
-  
-  const examsWithTopics = {};
-  examTopics.forEach(topic => {
-    if(!examsWithTopics[topic.examId]) {
-      examsWithTopics[topic.examId] = {
-        exam: exams.find(e => e.id === topic.examId),
-        topics: []
-      };
-    }
-    examsWithTopics[topic.examId].topics.push(topic);
-  });
-
-  Object.values(examsWithTopics)
-    .sort((a, b) => new Date(a.exam.date) - new Date(b.exam.date))
-    .forEach(({exam, topics}) => {
-      html += `
-        <div class="exam-card">
-          <div class="exam-header" onclick="toggleTopics(this)">
-            <h3>${escapeHtml(exam.title)}</h3>
-            <div class="toggle-icon">
-              <i class="fas fa-chevron-down"></i>
-            </div>
-          </div>
-          <div class="exam-topics">
-            ${topics.map(topic => `
-              <div class="topic-item">
-                <strong>${escapeHtml(topic.title)}</strong>
-                ${topic.desc ? `<p>${escapeHtml(topic.desc)}</p>` : ''}
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `;
-    });
-  
-  examTopicsList.innerHTML = html;
-}
-
-// Konuları aç/kapa
-function toggleTopics(header) {
-  const topics = header.nextElementSibling;
-  const isActive = topics.classList.contains('active');
-  
-  document.querySelectorAll('.exam-topics').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.exam-header').forEach(h => h.classList.remove('active'));
-  
-  if(!isActive) {
-    topics.classList.add('active');
-    header.classList.add('active');
-  }
-}
-
-// Butona tıklayınca modal aç
-addExamTopicBtn.addEventListener('click', ()=>{
-  if(exams.length === 0){
-    alert("Önce sınav ekleyin!");
-    return;
-  }
-  addTopicModal.style.display = 'flex';
-  topicExamSelect.innerHTML = '<option value="">Sınav Seçin</option>' +
-    exams.map(e => `<option value="${e.id}">${escapeHtml(e.title)}</option>`).join('');
 });
 
 // POMODORO SİSTEMİ - GERÇEK ZAMANLI XP
@@ -1940,6 +2059,47 @@ updateTimerDisplay();
 
 // Sayfa her açıldığında aylık sıfırlama kontrolü
 setInterval(checkMonthlyReset, 60 * 60 * 1000);
+
+// Sınav konuları ekleme butonu - EKLENDİ
+document.addEventListener('DOMContentLoaded', function() {
+  // Sınavlar bölümüne konu ekleme butonu ekle
+  const examsSection = document.getElementById('exams');
+  if (examsSection) {
+    const addTopicBtn = document.createElement('button');
+    addTopicBtn.id = 'addTopicBtn';
+    addTopicBtn.className = 'sync-button';
+    addTopicBtn.innerHTML = '<i class="fas fa-plus"></i> Konu Ekle';
+    addTopicBtn.style.marginBottom = '20px';
+    addTopicBtn.style.display = isAdmin ? 'block' : 'none';
+    
+    addTopicBtn.addEventListener('click', () => {
+      if(exams.length === 0){
+        alert("Önce sınav ekleyin!");
+        return;
+      }
+      addTopicModal.style.display = 'flex';
+      topicExamSelect.innerHTML = '<option value="">Sınav Seçin</option>' +
+        exams.map(e => `<option value="${e.id}">${escapeHtml(e.title)}</option>`).join('');
+    });
+    
+    examsSection.insertBefore(addTopicBtn, document.getElementById('examSorting'));
+  }
+});
+
+// Admin değiştiğinde konu ekleme butonunu güncelle
+const originalAdminSwitch = adminSwitch.addEventListener;
+adminSwitch.addEventListener('click', function() {
+  const pass=prompt("Admin şifresini girin:");
+  if(pass==="Gityazarkandayım"){
+    isAdmin=true;
+    updateUI(); 
+    renderClass();
+    // Konu ekleme butonunu göster
+    const addTopicBtn = document.getElementById('addTopicBtn');
+    if (addTopicBtn) addTopicBtn.style.display = 'block';
+  }
+  else alert("Şifre yanlış!");
+});
 </script>
 </body>
 </html>
